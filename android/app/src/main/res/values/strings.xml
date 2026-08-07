@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Maritimo</string>
+    <string name="title_activity_main">Maritimo</string>
+    <string name="package_name">hr.maritimo.app</string>
+    <string name="custom_url_scheme">hr.maritimo.app</string>
+</resources>

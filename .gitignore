@@ -1,0 +1,10 @@
+node_modules/
+.gradle/
+android/app/build/
+android/.gradle/
+android/build/
+*.apk
+*.aab
+*.iml
+.idea/
+*.keystore

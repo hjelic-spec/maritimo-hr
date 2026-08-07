@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#2c4f6e" />
+  <title>Maritimo · Kvarner (prototip)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">⚓</span>
+      <div>
+        <h1>Maritimo</h1>
+        <span class="tag">Jadran · prototip</span>
+      </div>
+    </div>
+    <button id="sosBtn" class="sos" aria-label="Hitne službe">SOS</button>
+  </header>
+
+  <!-- Region + GPS -->
+  <div class="regionbar">
+    <span class="regionbar-lbl">Područje</span>
+    <select id="regionSelect"></select>
+    <button id="gpsBtn" class="gps-btn" title="Prognoza za moju GPS lokaciju">📍 Moja lokacija</button>
+  </div>
+
+  <!-- Tabs -->
+  <nav class="tabbar">
+    <button class="tab active" data-tab="vrijeme">🌤️ Vrijeme</button>
+    <button class="tab" data-tab="dhmz">🇭🇷 DHMZ</button>
+    <button class="tab" data-tab="vodic">📒 Vodič</button>
+    <button class="tab" data-tab="info">ℹ️ Info</button>
+  </nav>
+
+  <main class="main">
+    <!-- TAB: VRIJEME -->
+    <section class="tabpane active" id="tab-vrijeme">
+      <div class="wx-scroll">
+        <div class="picker">
+          <label for="wxSelect">Lokacija prognoze</label>
+          <select id="wxSelect"></select>
+        </div>
+
+        <div class="card warnings" id="warnMarine"></div>
+
+        <div id="meteograms"></div>
+
+        <div class="mg-legend">
+          <span><i class="sw wind"></i> vjetar</span>
+          <span><i class="sw gust"></i> udari</span>
+          <span><i class="sw wave"></i> valovi</span>
+          <span><i class="sw rain"></i> kiša</span>
+          <span><i class="sw cloud"></i> oblaci</span>
+          <span><i class="sw air"></i> zrak °C</span>
+          <span><i class="sw sea"></i> more °C</span>
+          <span><i class="sw pres"></i> tlak</span>
+        </div>
+
+        <div class="card warnings" id="warnings"></div>
+
+        <p class="disclaimer">
+          ⚠️ <strong>Demo.</strong> Prognoza i meteogrami: Open-Meteo. Oznake isplovljavanja i
+          upozorenja su <strong>automatski izračun</strong>, nisu službeni. Prije isplovljenja
+          provjerite <a id="dhmzLink" href="https://meteo.hr/naslovnica_upozorenja.php" target="_blank" rel="noopener">službena upozorenja DHMZ-a</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- TAB: DHMZ -->
+    <section class="tabpane" id="tab-dhmz">
+      <div class="info-scroll">
+
+        <div class="card info-card">
+          <h3>🇭🇷 Službene prognoze DHMZ</h3>
+          <p>Poveznice na službene stranice Državnog hidrometeorološkog zavoda.
+          Otvaraju se u novoj kartici.</p>
+        </div>
+
+        <div class="card info-card">
+          <h3>🌊 Prognoze za Jadran i pomorce</h3>
+          <ul>
+            <li><a href="https://meteo.hr/prognoze.php?section=prognoze_specp&param=jadran" target="_blank" rel="noopener">Prognoza za Jadran</a></li>
+            <li><a href="https://meteo.hr/prognoze.php?section=prognoze_specp&param=pomorci" target="_blank" rel="noopener">Prognoza za pomorce</a></li>
+            <li><a href="https://meteo.hr/prognoze.php?section=prognoze_model&param=prog_nauticari" target="_blank" rel="noopener">Prognoza za nautičare (model)</a></li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
+          <h3>📊 Mjerenja</h3>
+          <ul>
+            <li><a href="https://meteo.hr/podaci.php?section=podaci_vrijeme&param=more_n" target="_blank" rel="noopener">Temperatura mora — obalne postaje</a></li>
+            <li><a href="https://meteo.hr/podaci.php?section=podaci_mjerenja&param=mg" target="_blank" rel="noopener">Pojava munja</a></li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
+          <h3>💨 ALADIN — vjetar 10 m po lokacijama</h3>
+          <ul>
+            <li><a href="https://meteo.hr/prognoze.php?section=prognoze_model&param=ala_k&el=web_uv10_SENJ_" target="_blank" rel="noopener">Senj</a></li>
+            <li><a href="https://meteo.hr/prognoze.php?section=prognoze_model&param=ala_k&el=web_uv10_MASL_" target="_blank" rel="noopener">Mali Lošinj</a></li>
+            <li><a href="https://meteo.hr/prognoze.php?section=prognoze_model&param=ala_k&el=web_uv10_SPLI_" target="_blank" rel="noopener">Split</a></li>
+            <li><a href="https://meteo.hr/prognoze.php?section=prognoze_model&param=ala_k&el=web_uv10_DUBR_" target="_blank" rel="noopener">Dubrovnik</a></li>
+          </ul>
+        </div>
+
+        <p class="disclaimer">
+          Izvor: <a href="https://meteo.hr/" target="_blank" rel="noopener">meteo.hr</a> — DHMZ (Otvorena licenca RH).
+        </p>
+
+      </div>
+    </section>
+
+    <!-- TAB: INFO -->
+    <section class="tabpane" id="tab-info">
+      <div class="info-scroll">
+
+        <div class="card info-disclaimer">
+          <h2>⚠️ Važna napomena</h2>
+          <p>Podaci o sidrištima (dubine, plutače, telefoni) su <strong>iz otvorenih izvora</strong> i
+          <strong>ne smiju se koristiti za stvarnu navigaciju</strong> ni za odluke o sigurnosti.
+          Uvijek koristite <strong>službene pomorske karte, peljar i upozorenja DHMZ-a</strong>,
+          te u nuždi <strong>MRCC (195) / 112 / VHF kanal 16</strong>.</p>
+        </div>
+
+        <div class="card info-card">
+          <h3>🚦 Kako se čita oznaka isplovljavanja</h3>
+          <p>Oznaka je okvirna procjena za <strong>manje brodice</strong>, izračunata iz prognoze
+          (vjetar, udari, valovi).</p>
+          <div class="info-verdicts">
+            <div class="iv-row"><span class="badge g">Povoljno</span>
+              <span>vjetar do ~10 čv · udari do ~17 čv · valovi do ~0,6 m — mirno, pogodno i za manje plovilo.</span></div>
+            <div class="iv-row"><span class="badge a">Oprez</span>
+              <span>vjetar ~11–16 čv · udari ~18–24 čv · valovi ~0,6–1,25 m — umjereno; manje i otvorene brodice oprezno.</span></div>
+            <div class="iv-row"><span class="badge r">Nepovoljno</span>
+              <span>vjetar ≥ ~17 čv · udari ≥ ~25 čv · valovi ≥ ~1,25 m — jak vjetar/valovi, odgoditi izlazak.</span></div>
+          </div>
+          <p class="info-note">Dnevna oznaka koristi <strong>maksimum kroz dan</strong> (najgori sat), pa
+          zna biti stroža od trenutnog stanja. Pragovi su okvirni — prilagodite ih svom plovilu i iskustvu.
+          Ako DHMZ ima aktivno upozorenje za vjetar, prikazuje se <strong>uz</strong> oznaku (ne mijenja je,
+          jer se često odnosi na dio dana ili određene zone).</p>
+        </div>
+
+        <div class="card info-card">
+          <h3>🌦️ Odakle dolazi prognoza</h3>
+          <ul>
+            <li><strong>Open-Meteo</strong> (besplatni otvoreni servis) — spaja više meteo modela;
+            za valove koristi model visoke rezolucije (~5 km) za Sredozemlje.</li>
+            <li>Satni podaci za <strong>3 dana</strong>, osvježava se više puta dnevno.</li>
+            <li>Vjetar/udari, temperatura zraka, oborina, oblaci i tlak iz meteo modela;
+            <strong>valovi i temperatura mora</strong> iz pomorskog modela.</li>
+            <li>Prognoza je <strong>za točku</strong> (odabrano područje/sidrište ili GPS) — lokalni
+            efekti (bura niz kanale, nagli maestral) mogu odstupati.</li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
+          <h3>⚙️ Model prognoze</h3>
+          <p>Meteogram (vjetar, temperatura, tlak, oborina, oblaci) računa se iz odabranog modela.
+          <strong>Valovi i temperatura mora</strong> dolaze iz pomorskog modela neovisno o ovom odabiru.</p>
+          <select id="modelSelect" class="model-select">
+            <option value="best_match">Automatski — najbolji za lokaciju (zadano)</option>
+            <option value="italia_meteo_arpae_icon_2i">ARPAE ICON-2I — Italija / Jadran (visoka rez.)</option>
+            <option value="icon_seamless">DWD ICON — Njemačka</option>
+            <option value="ecmwf_ifs025">ECMWF IFS — Europa</option>
+            <option value="meteofrance_seamless">Météo-France ARPEGE / AROME</option>
+            <option value="gfs_seamless">NOAA GFS — SAD</option>
+          </select>
+          <p class="info-note">Različiti modeli mogu dati različite rezultate; „Automatski" spaja
+          najbolji dostupni. Odabir se pamti i odmah osvježava meteogram.</p>
+        </div>
+
+        <div class="card info-card">
+          <h3>📈 Meteogram — što prikazuje</h3>
+          <ul>
+            <li>Šest panela odozgo: <strong>vjetar + udari</strong>, <strong>valovi</strong>, kiša,
+            oblaci, temperatura (zrak + more), tlak. Vjetar i valovi su istaknuti kao najvažniji.</li>
+            <li><strong>Strelice</strong> iznad panela vjetra pokazuju <strong>smjer kamo vjetar puše</strong>, za svaki sat.</li>
+            <li>Jedan dan stane na širinu ekrana; <strong>povuci lijevo/desno</strong> za sutra i prekosutra.</li>
+            <li>Prijeđi mišem (ili dodirni) po grafu — detalji za taj sat prikažu se u <strong>okviru iznad</strong>.</li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
+          <h3>🌊 Stanje mora (Douglasova ljestvica)</h3>
+          <p>Stupanj stanja mora prikazuje se uz visinu valova u detaljima meteograma.
+          Temelji se na <strong>Douglasovoj ljestvici</strong> (0–9), međunarodnom standardu za opis valovitosti.</p>
+          <table class="sea-state-tbl">
+            <thead><tr><th>Stupanj</th><th>Opis</th><th>Visina valova</th></tr></thead>
+            <tbody>
+              <tr><td>0</td><td>mirno</td><td>0 m</td></tr>
+              <tr><td>1</td><td>gotovo mirno</td><td>0–0,1 m</td></tr>
+              <tr><td>2</td><td>malo valovito</td><td>0,1–0,5 m</td></tr>
+              <tr><td>3</td><td>umjereno valovito</td><td>0,5–1,25 m</td></tr>
+              <tr><td>4</td><td>valovito</td><td>1,25–2,5 m</td></tr>
+              <tr><td>5</td><td>jako valovito</td><td>2,5–4 m</td></tr>
+              <tr><td>6</td><td>uzburkano</td><td>4–6 m</td></tr>
+              <tr><td>7</td><td>vrlo uzburkano</td><td>6–9 m</td></tr>
+              <tr><td>8</td><td>visoko</td><td>9–14 m</td></tr>
+              <tr><td>9</td><td>iznimno</td><td>&gt; 14 m</td></tr>
+            </tbody>
+          </table>
+          <p class="info-note">Za manje brodice na Jadranu, stupnjevi 0–2 su povoljni,
+          3 zahtijeva oprez, a od 4 nadalje preporučuje se odgoditi isplovljavanje.</p>
+        </div>
+
+        <div class="card info-card">
+          <h3>⚠️ Upozorenja: službena vs. automatska</h3>
+          <ul>
+            <li><strong>Službena upozorenja DHMZ</strong> (dno stranice) — stvarna, iz DHMZ CAP feeda
+            (Otvorena licenca RH), filtrirana na odabrano područje (kopnene regije + pomorske zone).</li>
+            <li><strong>More i vjetar (automatski)</strong> (vrh) — naš pomoćni izračun iz prognoze,
+            <strong>nije službeni</strong>.</li>
+            <li>Kod odluke uvijek imaju <strong>prednost službena DHMZ upozorenja</strong>.</li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
+          <h3>📍 Odabir lokacije i GPS</h3>
+          <ul>
+            <li>Gore biraš <strong>područje</strong> (Kvarner, Zadar, Šibenik, Split, Dubrovnik),
+            pa centar ili konkretno sidrište.</li>
+            <li><strong>📍 Moja lokacija</strong> — GPS odabere najbliže područje i najbliže sidrište,
+            te prognozu za tvoju točku.</li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
+          <h3>🆘 Sigurnost</h3>
+          <p>Gumb <strong>SOS</strong> nudi: <strong>MRCC 195</strong>, <strong>112</strong>,
+          <strong>VHF kanal 16</strong> (poziv u pogibelji), najbližu lučku kapetaniju i SeaHelp.
+          Brojevi 195 / 112 i VHF 16 su <strong>stvarni i univerzalni</strong>.</p>
+        </div>
+
+        <div class="card info-card">
+          <h3>📚 Izvori podataka i licence</h3>
+          <ul class="info-sources">
+            <li>Prognoza, valovi, temperatura — <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC-BY)</li>
+            <li>Službena upozorenja — <a href="https://meteo.hr/" target="_blank" rel="noopener">DHMZ</a> (Otvorena licenca RH)</li>
+          </ul>
+        </div>
+
+        <p class="disclaimer">
+          Maritimo · prototip. Sve procjene su informativne i ne zamjenjuju službene pomorske izvore,
+          prosudbu skipera ni iskustvo. Plovite sigurno.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- TAB: VODIČ -->
+    <section class="tabpane" id="tab-vodic">
+      <div class="info-scroll">
+
+        <div class="obj-filters" id="vodicFilters">
+          <button class="obj-filter active" data-f="all">Sve</button>
+          <button class="obj-filter" data-f="port">⚓ Luke</button>
+          <button class="obj-filter" data-f="marina">🛥️ Marine</button>
+          <button class="obj-filter" data-f="anchorage">🏖️ Sidrišta</button>
+          <button class="obj-filter" data-f="fuel">⛽ Pumpe</button>
+        </div>
+        <div class="obj-count" id="vodicCount"></div>
+        <div class="obj-list" id="vodicList"></div>
+
+        <p class="disclaimer">
+          Podaci su informativni i prikupljeni iz javnih izvora. Prije dolaska provjerite aktualno stanje.
+          Izvori: <a href="https://www.morski.hr/419/" target="_blank" rel="noopener">morski.hr</a> ·
+          <a href="https://nautica-portal.com/slane-tehnike/servisidileriioprema/popis-benzinskih-postaja/" target="_blank" rel="noopener">nautica-portal.com</a>
+        </p>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- SOS modal -->
+  <div class="modal-backdrop" id="sosModal" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h2>🆘 Hitne službe — Jadran</h2>
+        <button id="sosClose" aria-label="Zatvori">✕</button>
+      </div>
+      <a class="sos-row urgent" href="tel:195">
+        <span class="sos-num">195</span>
+        <span>MRCC — Nacionalna središnjica za traganje i spašavanje</span>
+      </a>
+      <a class="sos-row urgent" href="tel:112">
+        <span class="sos-num">112</span>
+        <span>Jedinstveni broj za hitne slučajeve</span>
+      </a>
+      <div class="sos-row">
+        <span class="sos-num">VHF 16</span>
+        <span>Poziv u pogibelji (DSC / govorni) — 24/7</span>
+      </div>
+      <div class="sos-row">
+        <span class="sos-num">VHF 10</span>
+        <span>Radna veza s obalnim postajama (Rijeka Radio)</span>
+      </div>
+      <div id="nearestCapt" class="sos-row"></div>
+      <a class="sos-row" href="tel:+385919112112">
+        <span class="sos-num">SeaHelp</span>
+        <span>Tehnička pomoć / tegljenje — +385 919 112 112</span>
+      </a>
+      <p class="sos-tip">
+        Pri pozivu javi: <strong>poziciju</strong> (GPS/naziv uvale), broj osoba,
+        vrstu plovila i prirodu opasnosti.
+      </p>
+    </div>
+  </div>
+
+  <script src="capacitor.js" onerror=""></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "maritimo-web",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["server.py"],
+      "port": 5173,
+      "autoPort": true
+    }
+  ]
+}

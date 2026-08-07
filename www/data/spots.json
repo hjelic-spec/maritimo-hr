@@ -1,0 +1,1897 @@
+{
+  "note": "DEMO podaci — ilustrativno, nije za navigaciju.",
+  "regions": [
+    {
+      "id": "kvarner",
+      "name": "Kvarner",
+      "center": {
+        "lat": 44.72,
+        "lon": 14.55
+      },
+      "dhmz": "rije|kvarner|primorj|velebit|senj|istr|krk|cres|lošinj|losinj|\\brab\\b",
+      "capitanies": [
+        {
+          "name": "Lučka kapetanija Rijeka",
+          "phone": "+385 51 214 031",
+          "vhf": "10"
+        },
+        {
+          "name": "Ispostava Mali Lošinj",
+          "phone": "+385 51 231 111",
+          "vhf": "10"
+        },
+        {
+          "name": "Ispostava Rab",
+          "phone": "+385 51 725 419",
+          "vhf": "10"
+        }
+      ],
+      "spots": [
+        {
+          "id": "krivica",
+          "name": "Uvala Krivica",
+          "type": "anchorage",
+          "island": "Lošinj",
+          "lat": 44.5762,
+          "lon": 14.4501,
+          "bottom": "mulj i trava",
+          "holding": "dobro",
+          "depth": "3–10 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S"
+          ],
+          "exposedTo": [
+            "SW",
+            "W"
+          ],
+          "buoys": true,
+          "notes": "Duboka, dobro zaštićena uvala kod Malog Lošinja. Ljeti gužva; postavljene su plutače (naplata). Ulaz uzak, pratiti oznake."
+        },
+        {
+          "id": "balvanida",
+          "name": "Uvala Balvanida",
+          "type": "anchorage",
+          "island": "Lošinj",
+          "lat": 44.6089,
+          "lon": 14.4712,
+          "bottom": "pijesak i trava",
+          "holding": "srednje",
+          "depth": "4–12 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E"
+          ],
+          "exposedTo": [
+            "S",
+            "SW",
+            "W"
+          ],
+          "buoys": false,
+          "notes": "Otvorenija uvala; dobra po buri, ali izložena jugu. Trava mjestimično slabo drži — provjeriti da je sidro zagrabilo."
+        },
+        {
+          "id": "sfumija",
+          "name": "Uvala Sv. Fumija (Kandarola)",
+          "type": "anchorage",
+          "island": "Rab",
+          "lat": 44.7526,
+          "lon": 14.7619,
+          "bottom": "pijesak",
+          "holding": "dobro",
+          "depth": "2–7 m",
+          "protectedFrom": [
+            "N",
+            "NW",
+            "W",
+            "SW"
+          ],
+          "exposedTo": [
+            "SE",
+            "E"
+          ],
+          "buoys": false,
+          "notes": "Pješčano dno, odlično držanje i za početnike. Dio zaljeva je poznata FKK plaža. Slabo zaštićeno od juga i istoka."
+        },
+        {
+          "id": "supetarska",
+          "name": "Supetarska Draga",
+          "type": "anchorage",
+          "island": "Rab",
+          "lat": 44.7876,
+          "lon": 14.7231,
+          "bottom": "mulj",
+          "holding": "dobro",
+          "depth": "2–6 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "S",
+            "SE",
+            "W"
+          ],
+          "exposedTo": [
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Vrlo dobro zaštićen zaljev, jedno od sigurnijih sidrišta na Rabu po lošem vremenu. Marina i plutače u dnu uvale."
+        },
+        {
+          "id": "valun",
+          "name": "Uvala Valun",
+          "type": "anchorage",
+          "island": "Cres",
+          "lat": 44.8497,
+          "lon": 14.3242,
+          "bottom": "pijesak i kamen",
+          "holding": "srednje",
+          "depth": "3–8 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E"
+          ],
+          "exposedTo": [
+            "S",
+            "SW",
+            "W"
+          ],
+          "buoys": true,
+          "notes": "Slikovito ribarsko mjesto. Plutače uz mul. Dobar zaklon od bure, izloženo maestralu i jugu popodne."
+        },
+        {
+          "id": "martinscica",
+          "name": "Martinšćica",
+          "type": "anchorage",
+          "island": "Cres",
+          "lat": 44.8206,
+          "lon": 14.3492,
+          "bottom": "pijesak i trava",
+          "holding": "srednje",
+          "depth": "3–10 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE"
+          ],
+          "exposedTo": [
+            "W",
+            "SW"
+          ],
+          "buoys": false,
+          "notes": "Široka uvala s marinom i kampom. Dobro po buri; popodnevni maestral diže valove sa zapada."
+        },
+        {
+          "id": "soline-krk",
+          "name": "Uvala Soline",
+          "type": "anchorage",
+          "island": "Krk",
+          "lat": 45.1361,
+          "lon": 14.6394,
+          "bottom": "mulj",
+          "holding": "dobro",
+          "depth": "2–5 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "exposedTo": [
+            "NW",
+            "W"
+          ],
+          "buoys": false,
+          "notes": "Plitki zaljev na sjeveru Krka, poznat po ljekovitom mulju. Vrlo dobro držanje; paziti na dubinu pri niskoj vodi."
+        },
+        {
+          "id": "aci-supetarska",
+          "name": "ACI marina Supetarska Draga",
+          "type": "marina",
+          "island": "Rab",
+          "lat": 44.7863,
+          "lon": 14.7269,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "2.5–4 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "S",
+            "SE",
+            "W",
+            "SW"
+          ],
+          "exposedTo": [],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 51 776 268",
+          "notes": "ACI marina, ~300 vezova. Struja, voda, gorivo u blizini. VHF kanal 17. Rezervacija preko ACI aplikacije."
+        },
+        {
+          "id": "aci-cres",
+          "name": "ACI marina Cres",
+          "type": "marina",
+          "island": "Cres",
+          "lat": 44.9603,
+          "lon": 14.4083,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "2–5 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "S",
+            "SE",
+            "W",
+            "SW"
+          ],
+          "exposedTo": [],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 51 571 622",
+          "notes": "Cjelogodišnja marina uz grad Cres. Zaštićena lukobranom sa svih strana. Restorani i trgovine u mjestu."
+        },
+        {
+          "id": "luka-mali-losinj",
+          "name": "Luka Mali Lošinj",
+          "type": "port",
+          "island": "Lošinj",
+          "lat": 44.5322,
+          "lon": 14.4699,
+          "bottom": "mulj",
+          "holding": "vez / sidro",
+          "depth": "3–8 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [
+            "S",
+            "SE"
+          ],
+          "buoys": false,
+          "phone": "+385 51 231 111",
+          "notes": "Duboka gradska luka. Ispostava lučke kapetanije, gorivo, opskrba. Jugo puše ravno u ulaz — po jugu potražiti bolji zaklon."
+        },
+        {
+          "id": "marina-punat",
+          "name": "Marina Punat",
+          "type": "marina",
+          "island": "Krk",
+          "lat": 45.0217,
+          "lon": 14.6267,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "2–8 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 51 654 111",
+          "notes": "Najstarija marina u Hrvatskoj (1964.), ~800 vezova za jahte do 45 m + 400 kopnenih. Cjelogodišnja, travel lift, servis, gorivo."
+        }
+      ],
+      "fuelStations": [
+        {
+          "id": "ina-mali-losinj",
+          "name": "B.P. INA Mali Lošinj",
+          "operator": "INA",
+          "lat": 44.532,
+          "lon": 14.470,
+          "phone": "+385 51 232 141",
+          "depth": "7.0 m",
+          "hours": "06–24 (sezona)",
+          "notes": "Na obali, dubina prilaza 7 m. Radi do ponoći u sezoni."
+        },
+        {
+          "id": "ina-cres-marina",
+          "name": "B.P. INA Cres (marina)",
+          "operator": "INA",
+          "lat": 44.960,
+          "lon": 14.408,
+          "phone": "+385 51 571 334",
+          "depth": "5.0 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Uz ACI marinu Cres."
+        },
+        {
+          "id": "ina-krk",
+          "name": "B.P. INA Krk",
+          "operator": "INA",
+          "lat": 45.027,
+          "lon": 14.573,
+          "phone": "+385 51 221 130",
+          "depth": "2.2 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Na obali grada Krka."
+        },
+        {
+          "id": "ina-rab",
+          "name": "B.P. INA Rab",
+          "operator": "INA",
+          "lat": 44.757,
+          "lon": 14.760,
+          "phone": "+385 51 724 142",
+          "depth": "2.5 m",
+          "hours": "0–24 (sezona) / 07–19 (zima)",
+          "notes": "Na obali grada Raba. Non-stop u sezoni."
+        },
+        {
+          "id": "ina-opatija-lido",
+          "name": "B.P. INA Opatija-Lido",
+          "operator": "INA",
+          "lat": 45.337,
+          "lon": 14.305,
+          "phone": "+385 51 271 327",
+          "depth": "4.0 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Na obali Opatije, uz plažu Lido."
+        },
+        {
+          "id": "ina-crikvenica",
+          "name": "B.P. INA Crikvenica",
+          "operator": "INA",
+          "lat": 45.177,
+          "lon": 14.692,
+          "phone": "+385 51 781 004",
+          "depth": "3.0 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Na obali Crikvenice."
+        },
+        {
+          "id": "ina-novi-vinodolski",
+          "name": "B.P. INA Novi Vinodolski",
+          "operator": "INA",
+          "lat": 45.127,
+          "lon": 14.788,
+          "phone": "+385 51 244 439",
+          "depth": "3.0 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Na obali Novog Vinodolskog."
+        },
+        {
+          "id": "maris-nerezine",
+          "name": "MARIS Nerezine (Lošinj)",
+          "operator": "MARIS / Tifon",
+          "lat": 44.665,
+          "lon": 14.394,
+          "phone": "+385 51 237 444",
+          "depth": "2.3 m",
+          "hours": "06–24 (sezona)",
+          "notes": "U Nerezinama na sjevernom Lošinju."
+        }
+      ]
+    },
+    {
+      "id": "zadar",
+      "name": "Zadarsko područje",
+      "center": {
+        "lat": 44.02,
+        "lon": 15.15
+      },
+      "dhmz": "zadar|zadarsk|dugi otok|kornat|pašman|pasman|ugljan|\\bpag\\b|\\bvir\\b|telašćic|telascic|silba|molat|\\bist\\b|sjeverni jadran|srednji jadran",
+      "capitanies": [
+        {
+          "name": "Lučka kapetanija Zadar",
+          "phone": "+385 23 254 800",
+          "vhf": "10"
+        },
+        {
+          "name": "Ispostava Sali",
+          "phone": "+385 23 377 022",
+          "vhf": "10"
+        }
+      ],
+      "spots": [
+        {
+          "id": "marina-zadar",
+          "name": "Marina Zadar (Tankerkomerc)",
+          "type": "marina",
+          "island": "Zadar",
+          "lat": 44.1147,
+          "lon": 15.223,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–5 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 23 333 233",
+          "notes": "Gradska marina uz stari grad Zadar. Zaštićena lukobranom, cjelogodišnja, gorivo i servis u blizini."
+        },
+        {
+          "id": "telascica-mir",
+          "name": "Telašćica – uvala Mir",
+          "type": "anchorage",
+          "island": "Dugi otok",
+          "lat": 43.885,
+          "lon": 15.178,
+          "bottom": "mulj i pijesak",
+          "holding": "dobro",
+          "depth": "3–12 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Prostrani zaljev u parku prirode Telašćica, vrlo zaštićen. Plutače (naplata), konobe; slano jezero i strme litice u blizini."
+        },
+        {
+          "id": "sali",
+          "name": "Sali (Dugi otok)",
+          "type": "port",
+          "island": "Dugi otok",
+          "lat": 43.9389,
+          "lon": 15.1631,
+          "bottom": "mulj",
+          "holding": "dobro",
+          "depth": "2–6 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [
+            "SW"
+          ],
+          "buoys": false,
+          "phone": "+385 23 377 022",
+          "notes": "Glavno mjesto Dugog otoka, ispostava kapetanije. Dobro zaštićena luka, opskrba i gorivo."
+        },
+        {
+          "id": "bozava",
+          "name": "Božava (Dugi otok)",
+          "type": "anchorage",
+          "island": "Dugi otok",
+          "lat": 44.14,
+          "lon": 14.91,
+          "bottom": "pijesak i mulj",
+          "holding": "dobro",
+          "depth": "2–7 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Slikovita uvala na sjeveru Dugog otoka. Plutače i mali vez; otvorena prema sjeverozapadu."
+        },
+        {
+          "id": "preko-ugljan",
+          "name": "Preko (Ugljan)",
+          "type": "anchorage",
+          "island": "Ugljan",
+          "lat": 44.077,
+          "lon": 15.19,
+          "bottom": "mulj i pijesak",
+          "holding": "srednje",
+          "depth": "2–6 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Nasuprot Zadru, otočić Galevac. Izloženo zapadnjaku i prometu trajekata."
+        },
+        {
+          "id": "veli-iz",
+          "name": "Veli Iž (Iž)",
+          "type": "anchorage",
+          "island": "Iž",
+          "lat": 44.053,
+          "lon": 15.113,
+          "bottom": "mulj",
+          "holding": "dobro",
+          "depth": "2–6 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Mirno mjesto s plutačama i marinom. Dobro držanje; maestral ulazi sa zapada."
+        },
+        {
+          "id": "aci-piskera",
+          "name": "ACI marina Piškera (Kornati)",
+          "type": "marina",
+          "island": "Kornati",
+          "lat": 43.76,
+          "lon": 15.35,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "2–5 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [
+            "SW"
+          ],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 91 470 0091",
+          "notes": "Sezonska marina usred Kornata, iza otočića Panitula. Bez naselja u blizini — opskrba ograničena."
+        },
+        {
+          "id": "zaton-nin",
+          "name": "Zaton (Nin)",
+          "type": "anchorage",
+          "island": "kopno",
+          "lat": 44.226,
+          "lon": 15.166,
+          "bottom": "pijesak",
+          "holding": "dobro",
+          "depth": "2–5 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": false,
+          "notes": "Plitki pješčani zaljev sjeverno od Zadra. Dobro držanje; paziti na dubinu i izloženost zapadu."
+        },
+        {
+          "id": "dmarin-dalmacija",
+          "name": "D-Marin Dalmacija (Sukošan)",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 44.0528,
+          "lon": 15.2981,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–10 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "phone": "+385 23 394 500",
+          "notes": "Najveća marina u Hrvatskoj — 1.200 morskih + 500 kopnenih vezova. Boatyard, travel lift, charter baza."
+        },
+        {
+          "id": "dmarin-borik",
+          "name": "D-Marin Borik (Zadar)",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 44.1317,
+          "lon": 15.2100,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "2–3.5 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW"],
+          "exposedTo": ["NW"],
+          "buoys": false,
+          "phone": "+385 23 333 036",
+          "notes": "Boutique marina, 177 vezova na plutajućim pontonima za jahte do 30 m. Bazen, bar, Blue Flag."
+        },
+        {
+          "id": "marina-kornati",
+          "name": "Marina Kornati (Biograd)",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 43.9424,
+          "lon": 15.4423,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–6.5 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "phone": "+385 97 736 1026",
+          "notes": "~805 vezova, jahte do 23 m. Važna charter baza za Kornate. Tri sekcije (centralna, zapadna, južna)."
+        },
+        {
+          "id": "marina-sangulin",
+          "name": "Marina Šangulin (Biograd)",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 43.9333,
+          "lon": 15.4500,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "1.5–4 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "phone": "+385 23 385 020",
+          "notes": "200 morskih + 20 kopnenih vezova za brodice do 15 m. Pristupačnija alternativa u Biogradu. Cjelogodišnja."
+        }
+      ],
+      "fuelStations": [
+        {
+          "id": "ina-zadar-vostarnica",
+          "name": "B.P. INA Zadar-Voštarnica",
+          "operator": "INA",
+          "lat": 44.112,
+          "lon": 15.227,
+          "phone": "+385 23 235 962",
+          "depth": "2.5 m",
+          "hours": "06–24 (sezona) / 07–19 (zima)",
+          "notes": "Glavna nautička pumpa u Zadru."
+        },
+        {
+          "id": "ina-biograd",
+          "name": "B.P. INA Biograd na Moru",
+          "operator": "INA",
+          "lat": 43.938,
+          "lon": 15.445,
+          "phone": "+385 23 383 961",
+          "depth": "2.2 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Na obali Biograda."
+        },
+        {
+          "id": "fuzul-sukosan",
+          "name": "B.P. Fuzul International (Bibinje-Sukošan)",
+          "operator": "Fuzul",
+          "lat": 44.080,
+          "lon": 15.310,
+          "phone": "+385 23 394 200",
+          "depth": "6.0 m",
+          "hours": "07–21 (sezona)",
+          "notes": "Kod marine Dalmacija u Sukošanu. Veliki gaz."
+        },
+        {
+          "id": "ina-preko-ugljan",
+          "name": "B.P. INA Preko (Ugljan)",
+          "operator": "INA",
+          "lat": 44.077,
+          "lon": 15.190,
+          "phone": "+385 23 286 214",
+          "depth": "2.2 m",
+          "hours": "06–22 cijele godine",
+          "notes": "Nasuprot Zadru, na otoku Ugljanu."
+        },
+        {
+          "id": "zaglav-dugi-otok",
+          "name": "B.P. Zaglav (Dugi otok)",
+          "operator": "Barbara Exclusive / INA",
+          "lat": 43.950,
+          "lon": 15.160,
+          "phone": "+385 23 377 234",
+          "depth": "3.0–6.0 m",
+          "hours": "07–21 (sezona)",
+          "notes": "Na Dugom otoku, blizu Salija i Telašćice."
+        },
+        {
+          "id": "ina-novalja-pag",
+          "name": "B.P. INA Novalja (Pag)",
+          "operator": "INA",
+          "lat": 44.557,
+          "lon": 14.883,
+          "phone": "+385 53 662 263",
+          "depth": "1.5 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Na obali Novalje. Plitko — pazi na gaz!"
+        }
+      ]
+    },
+    {
+      "id": "sibenik",
+      "name": "Šibensko područje",
+      "center": {
+        "lat": 43.7,
+        "lon": 15.8
+      },
+      "dhmz": "šibensk|sibensk|šibenik|sibenik|kornat|murter|primošten|primosten|zlarin|kaprij|žirj|zirj|vodic|prvić|prvic|skradin|srednji jadran",
+      "capitanies": [
+        {
+          "name": "Lučka kapetanija Šibenik",
+          "phone": "+385 22 217 217",
+          "vhf": "10"
+        },
+        {
+          "name": "Ispostava Vodice",
+          "phone": "+385 22 443 055",
+          "vhf": "10"
+        }
+      ],
+      "spots": [
+        {
+          "id": "marina-mandalina",
+          "name": "D-Marin Mandalina (Šibenik)",
+          "type": "marina",
+          "island": "Šibenik",
+          "lat": 43.72,
+          "lon": 15.898,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–6 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 22 364 000",
+          "notes": "Velika marina u zaštićenom Šibenskom zaljevu, iza kanala sv. Ante. Vrlo zaklonjeno, servis i gorivo."
+        },
+        {
+          "id": "aci-skradin",
+          "name": "ACI marina Skradin",
+          "type": "marina",
+          "island": "Krka",
+          "lat": 43.818,
+          "lon": 15.925,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–5 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 22 771 365",
+          "notes": "Na rijeci Krki, ulaz u NP Krka. Potpuno zaštićeno; slatkovodni utjecaj. Brodice do NP-a."
+        },
+        {
+          "id": "prvic-luka",
+          "name": "Prvić Luka",
+          "type": "anchorage",
+          "island": "Prvić",
+          "lat": 43.725,
+          "lon": 15.79,
+          "bottom": "mulj i pijesak",
+          "holding": "dobro",
+          "depth": "2–6 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Mirno mjesto blizu Vodica, plutače uz mul. Otvoreno prema sjeverozapadu."
+        },
+        {
+          "id": "zlarin",
+          "name": "Zlarin",
+          "type": "anchorage",
+          "island": "Zlarin",
+          "lat": 43.7,
+          "lon": 15.845,
+          "bottom": "mulj",
+          "holding": "dobro",
+          "depth": "2–7 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Otok bez automobila, luka s plutačama. Dobro zaštićeno od juga i bure."
+        },
+        {
+          "id": "kaprije",
+          "name": "Uvala Kaprije",
+          "type": "anchorage",
+          "island": "Kaprije",
+          "lat": 43.69,
+          "lon": 15.71,
+          "bottom": "pijesak i trava",
+          "holding": "srednje",
+          "depth": "3–9 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE"
+          ],
+          "exposedTo": [
+            "S",
+            "SW",
+            "W"
+          ],
+          "buoys": true,
+          "notes": "Popularno sidrište u šibenskom arhipelagu. Trava mjestimično slabije drži; izloženo jugu."
+        },
+        {
+          "id": "zirje-stupica",
+          "name": "Žirje – Velika Stupica",
+          "type": "anchorage",
+          "island": "Žirje",
+          "lat": 43.64,
+          "lon": 15.65,
+          "bottom": "pijesak i mulj",
+          "holding": "dobro",
+          "depth": "3–10 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": false,
+          "notes": "Duboka razvedena uvala na krajnjem otoku. Dobro držanje; zavjetrina po buri i jugu."
+        },
+        {
+          "id": "primosten",
+          "name": "Primošten (luka)",
+          "type": "port",
+          "island": "kopno",
+          "lat": 43.586,
+          "lon": 15.924,
+          "bottom": "mulj i pijesak",
+          "holding": "srednje",
+          "depth": "2–6 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [
+            "S",
+            "SE"
+          ],
+          "buoys": true,
+          "notes": "Slikovito mjesto na poluotoku. Zaklon od bure; jugo puše u luku."
+        },
+        {
+          "id": "vodice-marina",
+          "name": "Marina Vodice",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 43.757,
+          "lon": 15.778,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "2–4 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW",
+            "W"
+          ],
+          "exposedTo": [
+            "NW"
+          ],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 22 443 055",
+          "notes": "Velika turistička marina, dobro opremljena. Zaštićena lukobranom; opskrba u mjestu."
+        },
+        {
+          "id": "marina-frapa",
+          "name": "Marina Frapa (Rogoznica)",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 43.5303,
+          "lon": 15.9621,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–10 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "phone": "+385 22 559 900",
+          "notes": "500 morskih + 100 kopnenih vezova, 10 jetija. Jahte do 50 m, superjahte 40 m+. Luksuzna marina s hotelom, bazenom, restoranima."
+        },
+        {
+          "id": "marina-kremik",
+          "name": "Marina Kremik (Primošten)",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 43.5704,
+          "lon": 15.9393,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "5–18 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "phone": "+385 22 570 068",
+          "notes": "393 morskih vezova za jahte do 25 m + 150 kopnenih. Izuzetno duboka prirodna uvala. Charter baza."
+        },
+        {
+          "id": "marina-hramina",
+          "name": "Marina Hramina (Murter)",
+          "type": "marina",
+          "island": "Murter",
+          "lat": 43.8167,
+          "lon": 15.6000,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "1.5–3 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "phone": "+385 22 434 411",
+          "notes": "~370 morskih + 120 kopnenih vezova. Prirodno zaštićena uvala Hramina. Ulaz u NP Kornati. Plitko — nije za duboki gaz."
+        },
+        {
+          "id": "marina-betina",
+          "name": "Marina Betina (Murter)",
+          "type": "marina",
+          "island": "Murter",
+          "lat": 43.8150,
+          "lon": 15.6050,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–8 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW"],
+          "exposedTo": ["NW"],
+          "buoys": false,
+          "phone": "+385 22 434 497",
+          "notes": "240 morskih + 80 kopnenih vezova. Sjeverozapadni ulaz u Murterski kanal. Gorivo, servis, Wi-Fi."
+        }
+      ],
+      "fuelStations": [
+        {
+          "id": "ina-sibenik-obala",
+          "name": "B.P. INA Šibenik",
+          "operator": "INA",
+          "lat": 43.735,
+          "lon": 15.890,
+          "phone": "+385 22 213 868",
+          "depth": "7.0 m",
+          "hours": "06–22 cijele godine",
+          "notes": "Na obali, veliki gaz. Blizu marine Mandalina."
+        },
+        {
+          "id": "ina-vodice",
+          "name": "B.P. INA Vodice",
+          "operator": "INA",
+          "lat": 43.762,
+          "lon": 15.778,
+          "phone": "+385 22 443 024",
+          "depth": "3.3 m",
+          "hours": "08–20 (sezona)",
+          "notes": "Uz marinu Vodice."
+        },
+        {
+          "id": "ina-jezera-murter",
+          "name": "B.P. INA Jezera (Murter)",
+          "operator": "INA",
+          "lat": 43.787,
+          "lon": 15.632,
+          "phone": "+385 22 439 299",
+          "depth": "2.5 m",
+          "hours": "08–20 (sezona)",
+          "notes": "Na otoku Murteru, u uvali Jezera."
+        },
+        {
+          "id": "ina-murter",
+          "name": "B.P. INA Murter",
+          "operator": "INA",
+          "lat": 43.812,
+          "lon": 15.595,
+          "phone": "+385 22 434 499",
+          "depth": "2.2 m",
+          "hours": "06–22 cijele godine",
+          "notes": "U mjestu Murter."
+        },
+        {
+          "id": "ina-kremik-primosten",
+          "name": "B.P. INA Marina Kremik",
+          "operator": "INA",
+          "lat": 43.595,
+          "lon": 15.915,
+          "phone": "+385 22 571 110",
+          "depth": "3.0 m",
+          "hours": "06–22 (sezona)",
+          "notes": "U marini Kremik kod Primošten."
+        },
+        {
+          "id": "tribunj-pumpa",
+          "name": "B.P. Tribunj",
+          "operator": "privatni",
+          "lat": 43.757,
+          "lon": 15.745,
+          "phone": "+385 22 447 140",
+          "depth": "3.5 m",
+          "hours": "sezonski",
+          "notes": "U luci Tribunj."
+        },
+        {
+          "id": "flash-rogoznica",
+          "name": "Flash Rogoznica (marina Frapa)",
+          "operator": "Flash",
+          "lat": 43.528,
+          "lon": 15.967,
+          "phone": "+385 95 827 0120",
+          "depth": "—",
+          "hours": "08–20 (sezona IV–X)",
+          "notes": "U marini Frapa Rogoznica."
+        }
+      ]
+    },
+    {
+      "id": "split",
+      "name": "Splitsko područje",
+      "center": {
+        "lat": 43.4,
+        "lon": 16.3
+      },
+      "dhmz": "splitsk|split|brač|brac|hvar|šolta|solta|\\bvis\\b|čiovo|ciovo|trogir|kaštel|kastel|omiš|omis|makarsk|pakleni|palmiž|palmiz|srednji jadran|srednjodalmat",
+      "capitanies": [
+        {
+          "name": "Lučka kapetanija Split",
+          "phone": "+385 21 302 400",
+          "vhf": "10"
+        },
+        {
+          "name": "Ispostava Milna",
+          "phone": "+385 21 636 205",
+          "vhf": "10"
+        }
+      ],
+      "spots": [
+        {
+          "id": "aci-split",
+          "name": "ACI marina Split",
+          "type": "marina",
+          "island": "Split",
+          "lat": 43.501,
+          "lon": 16.44,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–6 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW",
+            "W"
+          ],
+          "exposedTo": [
+            "NW"
+          ],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 21 398 599",
+          "notes": "Marina zapadno od gradske luke Split. Dobro zaštićena; blizu trajektne luke — pratiti promet."
+        },
+        {
+          "id": "milna-brac",
+          "name": "Milna (Brač)",
+          "type": "anchorage",
+          "island": "Brač",
+          "lat": 43.327,
+          "lon": 16.452,
+          "bottom": "mulj i pijesak",
+          "holding": "dobro",
+          "depth": "2–8 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Duboka zaštićena uvala na zapadu Brača, marina i plutače. Jedno od boljih sidrišta u blizini Splita."
+        },
+        {
+          "id": "maslinica-solta",
+          "name": "Maslinica (Šolta)",
+          "type": "anchorage",
+          "island": "Šolta",
+          "lat": 43.397,
+          "lon": 16.205,
+          "bottom": "pijesak i mulj",
+          "holding": "dobro",
+          "depth": "3–10 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Uvala s otočićima na zapadu Šolte, marina Martinis Marchi. Zaklon od juga; otvorena zapadu."
+        },
+        {
+          "id": "stari-grad-hvar",
+          "name": "Stari Grad (Hvar)",
+          "type": "anchorage",
+          "island": "Hvar",
+          "lat": 43.184,
+          "lon": 16.598,
+          "bottom": "mulj",
+          "holding": "dobro",
+          "depth": "3–12 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Duboki zaljev, jedno od najzaštićenijih sidrišta srednjeg Jadrana. Maestral ulazi popodne sa zapada."
+        },
+        {
+          "id": "vis-luka",
+          "name": "Vis (luka)",
+          "type": "port",
+          "island": "Vis",
+          "lat": 43.061,
+          "lon": 16.19,
+          "bottom": "mulj i pijesak",
+          "holding": "dobro",
+          "depth": "3–15 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [
+            "NE"
+          ],
+          "buoys": true,
+          "notes": "Prostrana gradska luka. Bura (NE) može biti jaka; inače dobar zaklon i opskrba."
+        },
+        {
+          "id": "komiza",
+          "name": "Komiža (Vis)",
+          "type": "port",
+          "island": "Vis",
+          "lat": 43.045,
+          "lon": 16.092,
+          "bottom": "pijesak i mulj",
+          "holding": "srednje",
+          "depth": "3–10 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE"
+          ],
+          "exposedTo": [
+            "S",
+            "SW",
+            "W",
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Ribarsko mjesto na zapadu Visa, blizu Modre špilje/Biševa. Izloženo zapadu — po lošem vremenu na Vis."
+        },
+        {
+          "id": "palmizana",
+          "name": "Palmižana (Pakleni otoci)",
+          "type": "anchorage",
+          "island": "Pakleni",
+          "lat": 43.16,
+          "lon": 16.39,
+          "bottom": "pijesak i trava",
+          "holding": "srednje",
+          "depth": "3–12 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [
+            "S",
+            "SE",
+            "SW"
+          ],
+          "buoys": true,
+          "notes": "Popularna uvala nasuprot grada Hvara, marina i konobe. Trava slabije drži; izloženo jugu."
+        },
+        {
+          "id": "aci-trogir",
+          "name": "ACI marina Trogir",
+          "type": "marina",
+          "island": "Čiovo",
+          "lat": 43.515,
+          "lon": 16.251,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–5 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 21 881 544",
+          "notes": "Uz stari grad Trogir, u kanalu prema Čiovu. Vrlo zaštićeno; struja u kanalu."
+        },
+        {
+          "id": "marina-baotic",
+          "name": "Marina Baotić (Seget Donji)",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 43.5175,
+          "lon": 16.2321,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "4–20 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "phone": "+385 21 798 182",
+          "notes": "400 morskih + 100 kopnenih vezova. 8 min od Zračne luke Split. Moderna marina, charter baza."
+        },
+        {
+          "id": "marina-kastela",
+          "name": "Marina Kaštela",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 43.5461,
+          "lon": 16.4038,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "1.8–10 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "phone": "+385 21 204 010",
+          "notes": "420 morskih + 200 kopnenih vezova. Megajahte na vanjskom gatu (10 m dubine). Blizu Zračne luke Split. Boatyard."
+        },
+        {
+          "id": "aci-palmizana",
+          "name": "ACI marina Palmižana",
+          "type": "marina",
+          "island": "Sv. Klement (Pakleni otoci)",
+          "lat": 43.1633,
+          "lon": 16.3967,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–8 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW"],
+          "exposedTo": ["NW"],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 21 744 995",
+          "notes": "211 vezova za jahte do 25 m. Sezonska (travanj–listopad). Otočni ambijent nasuprot gradu Hvaru."
+        },
+        {
+          "id": "aci-vrboska",
+          "name": "ACI marina Vrboska",
+          "type": "marina",
+          "island": "Hvar",
+          "lat": 43.1800,
+          "lon": 16.6833,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–10 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 21 774 018",
+          "notes": "125 cjelogodišnjih vezova + 25 kopnenih. Vrboska — 'Mala Venecija Hvara'. Mirna marina u uvali."
+        }
+      ],
+      "fuelStations": [
+        {
+          "id": "ina-split-obala",
+          "name": "B.P. INA Split",
+          "operator": "INA",
+          "lat": 43.507,
+          "lon": 16.440,
+          "phone": "+385 21 399 484",
+          "depth": "3.5 m",
+          "hours": "06–24 cijele godine",
+          "notes": "Na obali, blizu gradske luke. Radi non-stop u sezoni."
+        },
+        {
+          "id": "ina-trogir",
+          "name": "B.P. INA Trogir",
+          "operator": "INA",
+          "lat": 43.515,
+          "lon": 16.251,
+          "phone": "+385 21 885 458",
+          "depth": "3.0 m",
+          "hours": "08–19 (sezona)",
+          "notes": "Uz ACI marinu Trogir."
+        },
+        {
+          "id": "ina-rogac-solta",
+          "name": "B.P. INA Rogač (Šolta)",
+          "operator": "INA",
+          "lat": 43.392,
+          "lon": 16.297,
+          "phone": "+385 21 654 180",
+          "depth": "4.5 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Trajektna luka na Šolti."
+        },
+        {
+          "id": "ina-milna-brac",
+          "name": "B.P. INA Milna (Brač)",
+          "operator": "INA",
+          "lat": 43.327,
+          "lon": 16.452,
+          "phone": "+385 21 636 340",
+          "depth": "3.0 m",
+          "hours": "06–22 (sezona)",
+          "notes": "U marini Milna, zapadno Brač."
+        },
+        {
+          "id": "ina-bol-brac",
+          "name": "B.P. INA Bol (Brač)",
+          "operator": "INA",
+          "lat": 43.262,
+          "lon": 16.655,
+          "phone": "+385 21 635 119",
+          "depth": "3.5 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Na obali Bola, južna strana Brača."
+        },
+        {
+          "id": "ina-hvar",
+          "name": "B.P. INA Hvar",
+          "operator": "INA",
+          "lat": 43.173,
+          "lon": 16.442,
+          "phone": "+385 21 741 060",
+          "depth": "1.8 m",
+          "hours": "06–22 (sezona)",
+          "notes": "U gradskoj luci Hvar. Mali gaz — pazi na dubinu!"
+        },
+        {
+          "id": "ina-vrboska-hvar",
+          "name": "B.P. INA Vrboska (Hvar)",
+          "operator": "INA",
+          "lat": 43.182,
+          "lon": 16.683,
+          "phone": "+385 21 774 220",
+          "depth": "2.0 m",
+          "hours": "08–15 (sezona)",
+          "notes": "U uvali Vrboska. Kraće radno vrijeme."
+        },
+        {
+          "id": "ina-vis",
+          "name": "B.P. INA Vis",
+          "operator": "INA",
+          "lat": 43.061,
+          "lon": 16.190,
+          "phone": "+385 21 711 176",
+          "depth": "2.5 m",
+          "hours": "06–22 (sezona)",
+          "notes": "U gradskoj luci Vis."
+        },
+        {
+          "id": "ina-makarska",
+          "name": "B.P. INA Makarska",
+          "operator": "INA",
+          "lat": 43.297,
+          "lon": 17.018,
+          "phone": "+385 21 612 660",
+          "depth": "5.0 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Na makarskoj obali."
+        }
+      ]
+    },
+    {
+      "id": "dubrovnik",
+      "name": "Dubrovačko područje",
+      "center": {
+        "lat": 42.7,
+        "lon": 17.95
+      },
+      "dhmz": "dubrov|elafit|mljet|lastov|šipan|sipan|kolo(č|c)ep|malostonsk|lopud|cavtat|ju(ž|z)ni jadran",
+      "capitanies": [
+        {
+          "name": "Lučka kapetanija Dubrovnik",
+          "phone": "+385 20 418 988",
+          "vhf": "10"
+        },
+        {
+          "name": "Ispostava Cavtat",
+          "phone": "+385 20 478 025",
+          "vhf": "10"
+        },
+        {
+          "name": "Ispostava Slano",
+          "phone": "+385 20 871 177",
+          "vhf": "10"
+        }
+      ],
+      "spots": [
+        {
+          "id": "aci-dubrovnik",
+          "name": "ACI marina Dubrovnik (Komolac)",
+          "type": "marina",
+          "island": "Rijeka dubrovačka",
+          "lat": 42.6725,
+          "lon": 18.1247,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "3–5 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 20 455 020",
+          "notes": "Velika ACI marina duboko u Rijeci dubrovačkoj, zaštićena sa svih strana. Gorivo, struja, voda, servis. Bura može puhati niz kanjon rijeke."
+        },
+        {
+          "id": "luka-gruz",
+          "name": "Luka Gruž",
+          "type": "port",
+          "island": "Dubrovnik",
+          "lat": 42.6585,
+          "lon": 18.0855,
+          "bottom": "mulj",
+          "holding": "vez / sidro",
+          "depth": "5–12 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "S",
+            "SE"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": false,
+          "phone": "+385 20 418 988",
+          "notes": "Glavna gradska/trajektna luka Dubrovnika. Lučka kapetanija, opskrba. Promet trajekata i kruzera — pratiti VHF."
+        },
+        {
+          "id": "cavtat",
+          "name": "Cavtat (luka)",
+          "type": "port",
+          "island": "kopno",
+          "lat": 42.5817,
+          "lon": 18.2186,
+          "bottom": "pijesak i mulj",
+          "holding": "dobro",
+          "depth": "3–8 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [
+            "S",
+            "SE"
+          ],
+          "buoys": true,
+          "phone": "+385 20 478 025",
+          "notes": "Slikovita luka južno od Dubrovnika, plutače u uvali Tiha. Dobar zaklon od bure; jugo ulazi u zaljev."
+        },
+        {
+          "id": "sunj-lopud",
+          "name": "Uvala Šunj (Lopud)",
+          "type": "anchorage",
+          "island": "Lopud",
+          "lat": 42.6773,
+          "lon": 17.943,
+          "bottom": "pijesak",
+          "holding": "dobro",
+          "depth": "2–6 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [
+            "S",
+            "SE"
+          ],
+          "buoys": false,
+          "notes": "Poznata pješčana uvala na Lopudu, odlično držanje. Otvorena prema jugu — po jugu i nevjeri napustiti."
+        },
+        {
+          "id": "polace-mljet",
+          "name": "Polače (Mljet)",
+          "type": "anchorage",
+          "island": "Mljet",
+          "lat": 42.7897,
+          "lon": 17.63,
+          "bottom": "mulj",
+          "holding": "dobro",
+          "depth": "3–10 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [],
+          "buoys": true,
+          "notes": "Prirodna luka zaštićena otočićima sa svih strana — jedno od najsigurnijih sidrišta na Jadranu. Blizu NP Mljet, plutače i konobe."
+        },
+        {
+          "id": "okuklje-mljet",
+          "name": "Okuklje (Mljet)",
+          "type": "anchorage",
+          "island": "Mljet",
+          "lat": 42.742,
+          "lon": 17.662,
+          "bottom": "mulj i trava",
+          "holding": "dobro",
+          "depth": "3–8 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "W",
+            "NW"
+          ],
+          "exposedTo": [
+            "SW"
+          ],
+          "buoys": true,
+          "notes": "Duboka, dobro zaštićena uvala s konobama i plutačama. Uzak ulaz; vrlo mirno unutra."
+        },
+        {
+          "id": "sipanska-luka",
+          "name": "Šipanska Luka (Šipan)",
+          "type": "anchorage",
+          "island": "Šipan",
+          "lat": 42.7213,
+          "lon": 17.872,
+          "bottom": "mulj",
+          "holding": "dobro",
+          "depth": "3–9 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": false,
+          "notes": "Duga uvala na sjeverozapadu Šipana. Dobro drži; otvorena prema sjeverozapadu (maestral)."
+        },
+        {
+          "id": "slano",
+          "name": "Slano",
+          "type": "anchorage",
+          "island": "kopno",
+          "lat": 42.786,
+          "lon": 17.891,
+          "bottom": "mulj i pijesak",
+          "holding": "dobro",
+          "depth": "2–8 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": false,
+          "phone": "+385 20 871 177",
+          "notes": "Zaštićen zaljev na kopnu, ispostava lučke kapetanije. Dobar zaklon od juga i bure; maestral ulazi sa zapada."
+        },
+        {
+          "id": "saplunara-mljet",
+          "name": "Uvala Saplunara (Mljet)",
+          "type": "anchorage",
+          "island": "Mljet",
+          "lat": 42.7015,
+          "lon": 17.764,
+          "bottom": "pijesak",
+          "holding": "dobro",
+          "depth": "2–5 m",
+          "protectedFrom": [
+            "N",
+            "NW",
+            "W"
+          ],
+          "exposedTo": [
+            "S",
+            "SE",
+            "E"
+          ],
+          "buoys": false,
+          "notes": "Pješčane uvale na krajnjem jugoistoku Mljeta, odlično držanje. Vrlo izloženo jugu i istoku — samo po lijepom vremenu."
+        },
+        {
+          "id": "donje-celo",
+          "name": "Donje Čelo (Koločep)",
+          "type": "anchorage",
+          "island": "Koločep",
+          "lat": 42.683,
+          "lon": 18.013,
+          "bottom": "pijesak",
+          "holding": "dobro",
+          "depth": "2–6 m",
+          "protectedFrom": [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S"
+          ],
+          "exposedTo": [
+            "W",
+            "NW"
+          ],
+          "buoys": true,
+          "notes": "Pješčana uvala na najbližem Elafitu Dubrovniku. Dobro držanje; otvorena prema zapadu i maestralu."
+        },
+        {
+          "id": "marina-frapa-dubrovnik",
+          "name": "Marina Frapa Dubrovnik (Lapad)",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 42.6583,
+          "lon": 18.0817,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "4–10 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "phone": "+385 20 422 266",
+          "notes": "220 vezova za jahte 10–50 m, megajahta do 100 m. U Gružkom zaljevu, nasuprot trajektnoj luci. Dio Frapa Resort brenda."
+        },
+        {
+          "id": "aci-korcula",
+          "name": "ACI marina Korčula",
+          "type": "marina",
+          "island": "Korčula",
+          "lat": 42.9631,
+          "lon": 17.1359,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "2–5 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "SW"],
+          "exposedTo": ["W", "NW"],
+          "buoys": false,
+          "vhf": "17",
+          "phone": "+385 98 398 854",
+          "notes": "159 morskih + 16 kopnenih vezova. Jahte do 50 m (dnevni vez) / 17 m (godišnji). Uz stari grad Korčule."
+        },
+        {
+          "id": "marina-korkyra",
+          "name": "Marina Korkyra (Vela Luka)",
+          "type": "marina",
+          "island": "Korčula",
+          "lat": 42.9592,
+          "lon": 16.7102,
+          "bottom": "—",
+          "holding": "vez",
+          "depth": "4–10 m",
+          "protectedFrom": ["N", "NE", "E", "S", "SE", "W", "SW", "NW"],
+          "exposedTo": [],
+          "buoys": false,
+          "phone": "+385 91 141 4700",
+          "notes": "132 morskih vezova za jahte do 40 m (mogu primiti do 100 m). Moderna marina na kraju 9,5 km prirodnog zaljeva."
+        }
+      ],
+      "fuelStations": [
+        {
+          "id": "ina-dubrovnik-komolac",
+          "name": "B.P. INA Dubrovnik-Komolac",
+          "operator": "INA",
+          "lat": 42.673,
+          "lon": 18.125,
+          "phone": "+385 20 454 142",
+          "depth": "4.0 m",
+          "hours": "06–22 (sezona)",
+          "notes": "U ACI marini Komolac, duboko u Rijeci dubrovačkoj."
+        },
+        {
+          "id": "ina-dubrovnik-orsan",
+          "name": "B.P. INA Dubrovnik-Orsan",
+          "operator": "INA",
+          "lat": 42.652,
+          "lon": 18.090,
+          "phone": "+385 20 435 965",
+          "depth": "3.7 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Kod marine Orsan, blizu starog grada."
+        },
+        {
+          "id": "ina-korcula",
+          "name": "B.P. INA Korčula",
+          "operator": "INA",
+          "lat": 42.960,
+          "lon": 17.137,
+          "phone": "+385 20 711 017",
+          "depth": "3.5 m",
+          "hours": "06–22 cijele godine",
+          "notes": "Na obali grada Korčule."
+        },
+        {
+          "id": "ina-vela-luka",
+          "name": "B.P. INA Vela Luka",
+          "operator": "INA",
+          "lat": 42.960,
+          "lon": 16.720,
+          "phone": "+385 20 812 910",
+          "depth": "3.0 m",
+          "hours": "06–22 (sezona)",
+          "notes": "U luci Vela Luka na zapadnom kraju Korčule."
+        },
+        {
+          "id": "ina-ubli-lastovo",
+          "name": "B.P. INA Ubli (Lastovo)",
+          "operator": "INA",
+          "lat": 42.745,
+          "lon": 16.823,
+          "phone": "+385 20 805 034",
+          "depth": "2.5 m",
+          "hours": "06–22 (sezona)",
+          "notes": "Trajektna luka na Lastovu. Jedina pumpa na otoku."
+        },
+        {
+          "id": "ina-sobra-mljet",
+          "name": "B.P. INA Sobra (Mljet)",
+          "operator": "INA",
+          "lat": 42.745,
+          "lon": 17.595,
+          "phone": "+385 20 746 233",
+          "depth": "5.0 m",
+          "hours": "08–20 (sezona)",
+          "notes": "U luci Sobra, trajektna veza s kopnom. Jedina pumpa na Mljetu."
+        },
+        {
+          "id": "ina-ploce",
+          "name": "B.P. INA Ploče",
+          "operator": "INA",
+          "lat": 43.053,
+          "lon": 17.433,
+          "phone": "+385 20 679 579",
+          "depth": "10.0 m",
+          "hours": "06–22 cijele godine",
+          "notes": "Luka Ploče, veliki gaz."
+        }
+      ]
+    }
+  ]
+}
