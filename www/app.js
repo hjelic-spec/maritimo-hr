@@ -1,4 +1,4 @@
-// Maritimo — prototip za voditelje brodica (Kvarner)
+// Maritimo — pomorska vremenska prognoza za voditelje brodica (Jadran)
 // Tab "Vrijeme": Open-Meteo meteogrami (3 dana) + dnevne oznake + izvedena upozorenja.
 
 const COMPASS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
@@ -23,6 +23,27 @@ function assess(windKn, gustKn, waveM) {
     level = "r"; title = "Nepovoljno"; sub = "Jak vjetar ili valovi — odgoditi izlazak.";
   }
   return { level, title, sub };
+}
+
+const BEAUFORT = [
+  [1,   "tišina"],
+  [4,   "lahor"],
+  [7,   "povjetarac"],
+  [11,  "slab vjetar"],
+  [17,  "umjeren vjetar"],
+  [22,  "umjereno jak"],
+  [28,  "jak vjetar"],
+  [34,  "žestok vjetar"],
+  [41,  "olujni vjetar"],
+  [48,  "jaka oluja"],
+  [56,  "vrlo jaka oluja"],
+  [64,  "orkanska oluja"],
+  [Infinity, "orkan"]
+];
+function beaufort(kn) {
+  for (let i = 0; i < BEAUFORT.length; i++)
+    if (kn < BEAUFORT[i][0]) return { n: i, label: BEAUFORT[i][1] };
+  return { n: 12, label: BEAUFORT[12][1] };
 }
 
 const SEA_STATE = [
@@ -181,18 +202,13 @@ function buildMeteogram(hours, plotW) {
     [CL_Y - 9, CL_B + 3], [TP_Y - 10, TP_B + 3], [PR_Y - 11, PR_B + 3]
   ];
 
-  // vjetar (blue) i valovi (aqua) su prioritetni paneli — akcenti
-  const HI = ["#2a78d6", "#1baf7a"];
-
   // ===== FIKSNA OS (lijevo) =====
   const atk = (y, t) => `<text x="${AX_W - 4}" y="${y + 3}" class="mg-ax" text-anchor="end">${t}</text>`;
   let a = `<svg class="mg-axis" width="${AX_W}" height="${H}" viewBox="0 0 ${AX_W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
   bands.forEach(([t, b], k) => {
-    const hi = k < 2;
-    a += `<rect x="1" y="${t}" width="${AX_W - 1}" height="${b - t}" rx="3" class="mg-band${hi ? " mg-band-hi" : ""}"/>`;
-    if (hi) a += `<rect x="0" y="${t}" width="3.5" height="${b - t}" rx="1.5" fill="${HI[k]}"/>`;
+    a += `<rect x="1" y="${t}" width="${AX_W - 1}" height="${b - t}" rx="3" class="mg-band"/>`;
     const ic = MG_ICONS[k];
-    a += `<g transform="translate(${hi ? 7 : 4},${t + 1})" color="${ic.color}">${ic.svg}</g>`;
+    a += `<g transform="translate(4,${t + 1})" color="${ic.color}">${ic.svg}</g>`;
   });
   for (let v = 0; v <= wmax + 1e-6; v += wstep) a += atk(yWind(v), v);
   for (let v = 0; v <= vmax + 1e-6; v += vstep) a += atk(yWave(v), fmtTick(v));
@@ -204,13 +220,14 @@ function buildMeteogram(hours, plotW) {
 
   // ===== SKROLABILNI GRAF =====
   let s = `<svg class="mg-plot" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" data-n="${n}" data-w="${W}" data-wmax="${wmax}" data-vmax="${vmax}" data-plo="${pLo}" data-phi="${pHi}" data-tlo="${tLo}" data-thi="${tHi}" xmlns="http://www.w3.org/2000/svg">`;
-  bands.forEach(([t, b], k) => s += `<rect x="0" y="${t}" width="${W}" height="${b - t}" rx="4" class="mg-band${k < 2 ? " mg-band-hi" : ""}"/>`);
+  bands.forEach(([t, b]) => s += `<rect x="0" y="${t}" width="${W}" height="${b - t}" rx="4" class="mg-band"/>`);
 
   // fini satni raster + 6h + oznake sati
   hours.forEach((x, i) => { s += `<line x1="${xi(i)}" y1="${TOP}" x2="${xi(i)}" y2="${PR_B}" class="mg-hline"/>`; });
   hours.forEach((x, i) => {
     if (x.hour % 6 !== 0) return;
     s += `<line x1="${xi(i)}" y1="${TOP}" x2="${xi(i)}" y2="${PR_B}" class="mg-vgrid"/>`;
+    s += `<text x="${xi(i)}" y="${AR_Y - 6}" class="mg-ax" text-anchor="middle">${String(x.hour).padStart(2, "0")}</text>`;
     s += `<text x="${xi(i)}" y="${H - 5}" class="mg-ax" text-anchor="middle">${String(x.hour).padStart(2, "0")}</text>`;
   });
 
@@ -228,7 +245,9 @@ function buildMeteogram(hours, plotW) {
 
   const grid = y => `<line x1="0" y1="${y}" x2="${W}" y2="${y}" class="mg-grid"/>`;
 
-  // 1) VJETAR
+  // 1) VJETAR — granice opasnosti
+  if (wmax > 11) s += `<line x1="0" y1="${yWind(11)}" x2="${W}" y2="${yWind(11)}" class="mg-limit-a"/>`;
+  if (wmax > 17) s += `<line x1="0" y1="${yWind(17)}" x2="${W}" y2="${yWind(17)}" class="mg-limit-r"/>`;
   for (let v = 0; v <= wmax + 1e-6; v += wstep) s += grid(yWind(v));
   s += `<polyline points="${poly(gusts, yWind)}" class="mg-gust"/>`;
   s += `<polyline points="${poly(winds, yWind)}" class="mg-wind"/>`;
@@ -237,10 +256,13 @@ function buildMeteogram(hours, plotW) {
     const ang = Math.round((x.dir + 180) % 360);
     s += `<g class="mg-warrow" transform="translate(${xi(i).toFixed(1)},${AR_Y}) rotate(${ang})"><line x1="0" y1="6.5" x2="0" y2="-3"/><path d="M0,-7.5 L-3.2,-2 L3.2,-2 Z"/></g>`;
   });
-  // 2) VALOVI
+  // 2) VALOVI — granice opasnosti
+  if (vmax > 0.6) s += `<line x1="0" y1="${yWave(0.6)}" x2="${W}" y2="${yWave(0.6)}" class="mg-limit-a"/>`;
+  if (vmax > 1.25) s += `<line x1="0" y1="${yWave(1.25)}" x2="${W}" y2="${yWave(1.25)}" class="mg-limit-r"/>`;
   for (let v = 0; v <= vmax + 1e-6; v += vstep) s += grid(yWave(v));
   const wavePts = hours.map((x, i) => `${xi(i).toFixed(1)},${yWave(waves[i]).toFixed(1)}`).join(" L ");
-  s += `<path d="M 0,${WV_B} L ${wavePts} L ${W},${WV_B} Z" class="mg-wave"/>`;
+  s += `<path d="M 0,${WV_B} L ${wavePts} L ${W},${WV_B} Z" class="mg-wave-fill"/>`;
+  s += `<polyline points="${poly(waves, yWave)}" class="mg-wave"/>`;
   // 3) KIŠA
   s += grid(RN_B);
   hours.forEach((x, i) => { if (!x.precip) return; const hh = Math.min(1, x.precip / pmax) * RN_H; s += `<rect x="${xi(i) - bw / 2}" y="${RN_B - hh}" width="${bw}" height="${hh}" rx="1" class="mg-rain"/>`; });
@@ -271,7 +293,7 @@ function renderReadout(h) {
   el.innerHTML =
     `<div class="ro-head">${KRAT_DAN[h.t.getDay()]} ${String(h.hour).padStart(2, "0")}:00 · ${ARROWS[dirTo8(h.dir)]} ${windName(h.dir, h.wind)}</div>` +
     `<div class="ro-rows">` +
-    row("background:#2a78d6", "Vjetar", `${Math.round(h.wind)} / udari ${Math.round(h.gust)} čv`) +
+    row("background:#2a78d6", "Vjetar", (() => { const bf = beaufort(h.wind); return `${Math.round(h.wind)} / udari ${Math.round(h.gust)} čv · Bf ${bf.n} (${bf.label})`; })()) +
     row("background:#1baf7a", "Valovi", h.wave == null ? "—" : (() => { const ss = seaState(h.wave); return `${h.wave.toFixed(2)} m · stanje mora ${ss.n} (${ss.label})`; })()) +
     row("background:#5598e7", "Kiša", `${(h.precip || 0).toFixed(1)} mm`) +
     row("background:#a7b0b8", "Oblaci", `${Math.round(h.cloud)} %`) +
@@ -659,9 +681,14 @@ function wireRegion() {
   sel.onchange = () => setRegion(sel.value);
 
   const gps = document.getElementById("gpsBtn");
-  gps.onclick = () => {
-    if (!navigator.geolocation) { alert("GPS nije dostupan u ovom pregledniku."); return; }
-    gps.disabled = true; gps.textContent = "📍 Tražim…";
+  gps.onclick = () => locateUser({ silent: false });
+}
+
+function locateUser({ silent = false } = {}) {
+  if (!navigator.geolocation) { if (!silent) alert("GPS nije dostupan u ovom pregledniku."); return Promise.resolve(false); }
+  const gps = document.getElementById("gpsBtn");
+  gps.disabled = true; gps.textContent = "📍 Tražim…";
+  return new Promise(resolve => {
     navigator.geolocation.getCurrentPosition(async pos => {
       const la = pos.coords.latitude, lo = pos.coords.longitude;
       const nearest = state.regions.reduce((a, r) => {
@@ -670,21 +697,19 @@ function wireRegion() {
       }, { r: state.regions[0], d: Infinity }).r;
       gps.disabled = false; gps.textContent = "📍 Moja lokacija";
       await setRegion(nearest.id, { skipWeather: true });
-      // najbliže sidrište u tom području
       const spot = nearest.spots.reduce((a, s) => {
         const d = (s.lat - la) ** 2 + (s.lon - lo) ** 2;
         return d < a.d ? { s, d } : a;
       }, { s: null, d: Infinity }).s;
-      if (spot) {
-        selectSpot(spot.id);
-      } else {
-        await loadWeather(la, lo, "📍 Moja lokacija");
-      }
+      if (spot) await selectSpot(spot.id);
+      else await loadWeather(la, lo, "📍 Moja lokacija");
+      resolve(true);
     }, err => {
       gps.disabled = false; gps.textContent = "📍 Moja lokacija";
-      alert("Ne mogu dohvatiti GPS lokaciju: " + err.message);
+      if (!silent) alert("Ne mogu dohvatiti GPS lokaciju: " + err.message);
+      resolve(false);
     }, { enableHighAccuracy: true, timeout: 10000 });
-  };
+  });
 }
 
 // Izbor modela prognoze (Open-Meteo) — pamti se i osvježava meteogram
@@ -769,8 +794,8 @@ async function boot() {
   wireRegion();
   wireModel();
   wireVodicTab();
-  await setRegion(state.regions[0].id);   // učita spots, izbornike, SOS, vrijeme
-  // DHMZ upozorenja (jednom, nacionalni feed — filtrira se po području)
+  await setRegion(state.regions[0].id);
+  locateUser({ silent: true });
   state.dhmz = await fetchDhmz();
   if (state.wx) { renderWarnings(state.wx, state.dhmz); renderMeteograms(state.wx); }
 }

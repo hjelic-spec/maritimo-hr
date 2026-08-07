@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#2c4f6e" />
-  <title>Maritimo · Kvarner (prototip)</title>
+  <title>Maritimo · Jadran</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
@@ -16,7 +16,7 @@
       <span class="logo">⚓</span>
       <div>
         <h1>Maritimo</h1>
-        <span class="tag">Jadran · prototip</span>
+        <span class="tag">Jadran</span>
       </div>
     </div>
     <button id="sosBtn" class="sos" aria-label="Hitne službe">SOS</button>
@@ -186,6 +186,33 @@
         </div>
 
         <div class="card info-card">
+          <h3>💨 Stanje vjetra (Beaufortova ljestvica)</h3>
+          <p>Stupanj jačine vjetra prikazuje se uz brzinu vjetra u detaljima meteograma.
+          Temelji se na <strong>Beaufortovoj ljestvici</strong> (0–12), međunarodnom standardu za opis jačine vjetra.
+          Brzine su u čvorovima (kn).</p>
+          <table class="sea-state-tbl">
+            <thead><tr><th>Bf</th><th>Opis</th><th>Brzina vjetra</th></tr></thead>
+            <tbody>
+              <tr><td>0</td><td>tišina</td><td>&lt; 1 čv</td></tr>
+              <tr><td>1</td><td>lahor</td><td>1–3 čv</td></tr>
+              <tr><td>2</td><td>povjetarac</td><td>4–6 čv</td></tr>
+              <tr><td>3</td><td>slab vjetar</td><td>7–10 čv</td></tr>
+              <tr><td>4</td><td>umjeren vjetar</td><td>11–16 čv</td></tr>
+              <tr><td>5</td><td>umjereno jak</td><td>17–21 čv</td></tr>
+              <tr><td>6</td><td>jak vjetar</td><td>22–27 čv</td></tr>
+              <tr><td>7</td><td>žestok vjetar</td><td>28–33 čv</td></tr>
+              <tr><td>8</td><td>olujni vjetar</td><td>34–40 čv</td></tr>
+              <tr><td>9</td><td>jaka oluja</td><td>41–47 čv</td></tr>
+              <tr><td>10</td><td>vrlo jaka oluja</td><td>48–55 čv</td></tr>
+              <tr><td>11</td><td>orkanska oluja</td><td>56–63 čv</td></tr>
+              <tr><td>12</td><td>orkan</td><td>≥ 64 čv</td></tr>
+            </tbody>
+          </table>
+          <p class="info-note">Za manje brodice na Jadranu, Bf 0–3 su povoljni,
+          Bf 4 zahtijeva oprez, a od Bf 5 nadalje preporučuje se odgoditi isplovljavanje.</p>
+        </div>
+
+        <div class="card info-card">
           <h3>🌊 Stanje mora (Douglasova ljestvica)</h3>
           <p>Stupanj stanja mora prikazuje se uz visinu valova u detaljima meteograma.
           Temelji se na <strong>Douglasovoj ljestvici</strong> (0–9), međunarodnom standardu za opis valovitosti.</p>
@@ -245,7 +272,7 @@
         </div>
 
         <p class="disclaimer">
-          Maritimo · prototip. Sve procjene su informativne i ne zamjenjuju službene pomorske izvore,
+          Maritimo. Sve procjene su informativne i ne zamjenjuju službene pomorske izvore,
           prosudbu skipera ni iskustvo. Plovite sigurno.
         </p>
 
