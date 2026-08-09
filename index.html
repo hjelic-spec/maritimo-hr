@@ -81,6 +81,18 @@
           Otvaraju se u novoj kartici.</p>
         </div>
 
+        <div class="card info-card radar-card">
+          <h3>📡 Radarska slika — kompozit</h3>
+          <p>Kompozitna radarska slika oborina za Hrvatsku (DHMZ). Dodirnite sliku za punu verziju.</p>
+          <a href="https://meteo.hr/podaci.php?section=podaci_mjerenja&param=radari&el=kompozit" target="_blank" rel="noopener">
+            <img id="dhmz-radar-img" src="https://vrijeme.hr/kompozit-stat.png" alt="DHMZ radarska slika" class="radar-img">
+          </a>
+          <div class="radar-controls">
+            <button id="btn-radar-refresh" class="radar-btn" title="Osvježi">↻ Osvježi</button>
+            <a href="https://meteo.hr/podaci.php?section=podaci_mjerenja&param=radari&el=kompozit&acto=anim" target="_blank" rel="noopener" class="radar-btn">▶ Animacija</a>
+          </div>
+        </div>
+
         <div class="card info-card">
           <h3>🌊 Prognoze za Jadran i pomorce</h3>
           <ul>
@@ -233,6 +245,20 @@
           </table>
           <p class="info-note">Za manje brodice na Jadranu, stupnjevi 0–2 su povoljni,
           3 zahtijeva oprez, a od 4 nadalje preporučuje se odgoditi isplovljavanje.</p>
+        </div>
+
+        <div class="card info-card">
+          <h3>📡 DHMZ radar</h3>
+          <ul>
+            <li><strong>Kompozitna radarska slika</strong> — prikazuje oborine u stvarnom vremenu
+            (kiša, pljuskovi, grmljavina) za cijelu Hrvatsku i šire.</li>
+            <li>Slika se učitava s <strong>DHMZ-a</strong> (vrijeme.hr) i prikazuje najnoviji dostupni sken.</li>
+            <li><strong>Osvježi</strong> — ručno učitaj najnoviju sliku (radar se ažurira otprilike svakih 5–10 min).</li>
+            <li><strong>Animacija</strong> — otvara DHMZ stranicu s animacijom pomicanja oborina (zadnjih nekoliko sati).</li>
+            <li>Dodirom na sliku otvara se <strong>puna radarska stranica</strong> na meteo.hr.</li>
+            <li>Korisno za provjeru <strong>približava li se kiša ili nevrijeme</strong> — osobito u kombinaciji
+            s prognozom oborina na meteogramu.</li>
+          </ul>
         </div>
 
         <div class="card info-card">

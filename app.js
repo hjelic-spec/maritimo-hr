@@ -141,16 +141,16 @@ function dayVerdict(hours) {
 // Zajednička geometrija (koristi je i crtanje i hover)
 // Redoslijed panela: vjetar → valovi → kiša → oblaci → temperatura → tlak
 // AR_Y = traka za strelice smjera (iznad panela vjetra)
-const MG = { AX_W: 44, DAY_Y: 12, AR_Y: 30,
-  WN_Y: 44, WN_H: 76,    // vjetar — najvažniji, najviši
-  WV_Y: 146, WV_H: 50,   // valovi — drugi po važnosti
-  RN_Y: 216, RN_H: 20,
-  CL_Y: 256, CL_H: 18,
-  TP_Y: 296, TP_H: 44,
-  PR_Y: 360, PR_H: 34 };
+const MG = { AX_W: 44, DAY_Y: 8, HR_Y: 22, AR_Y: 40,
+  WN_Y: 54, WN_H: 76,    // vjetar — najvažniji, najviši
+  WV_Y: 156, WV_H: 50,   // valovi — drugi po važnosti
+  RN_Y: 226, RN_H: 20,
+  CL_Y: 266, CL_H: 18,
+  TP_Y: 306, TP_H: 44,
+  PR_Y: 370, PR_H: 34 };
 MG.WN_B = MG.WN_Y + MG.WN_H; MG.WV_B = MG.WV_Y + MG.WV_H; MG.RN_B = MG.RN_Y + MG.RN_H;
 MG.CL_B = MG.CL_Y + MG.CL_H; MG.TP_B = MG.TP_Y + MG.TP_H; MG.PR_B = MG.PR_Y + MG.PR_H;
-MG.H = 406;
+MG.H = 416;
 const fmtTick = v => `${+v.toFixed(2)}`;
 
 const MG_ICONS = [
@@ -166,7 +166,7 @@ const MG_ICONS = [
 // Jedan dan ≈ širina okvira; ostali dani se skrolaju horizontalno.
 function buildMeteogram(hours, plotW) {
   const n = hours.length;
-  const { AX_W, DAY_Y, AR_Y, WN_Y, WN_H, WN_B, WV_Y, WV_H, WV_B, RN_Y, RN_H, RN_B,
+  const { AX_W, DAY_Y, HR_Y, AR_Y, WN_Y, WN_H, WN_B, WV_Y, WV_H, WV_B, RN_Y, RN_H, RN_B,
     CL_Y, CL_H, CL_B, TP_Y, TP_H, TP_B, PR_Y, PR_H, PR_B, H } = MG;
   const W = plotW;
   const xi = i => (i / Math.max(1, n - 1)) * W;
@@ -224,12 +224,6 @@ function buildMeteogram(hours, plotW) {
 
   // fini satni raster + 6h + oznake sati
   hours.forEach((x, i) => { s += `<line x1="${xi(i)}" y1="${TOP}" x2="${xi(i)}" y2="${PR_B}" class="mg-hline"/>`; });
-  hours.forEach((x, i) => {
-    if (x.hour % 6 !== 0) return;
-    s += `<line x1="${xi(i)}" y1="${TOP}" x2="${xi(i)}" y2="${PR_B}" class="mg-vgrid"/>`;
-    s += `<text x="${xi(i)}" y="${AR_Y - 6}" class="mg-ax" text-anchor="middle">${String(x.hour).padStart(2, "0")}</text>`;
-    s += `<text x="${xi(i)}" y="${H - 5}" class="mg-ax" text-anchor="middle">${String(x.hour).padStart(2, "0")}</text>`;
-  });
 
   // dnevni separatori + oznake dana
   const bounds = [];
@@ -242,6 +236,13 @@ function buildMeteogram(hours, plotW) {
     const name = b === 0 ? "Danas" : b === 1 ? "Sutra" : DANI[hours[i0].t.getDay()];
     s += `<text x="${(xi(i0) + xi(i1)) / 2}" y="${DAY_Y}" class="mg-day">${name} ${hours[i0].t.getDate()}.${hours[i0].t.getMonth() + 1}.</text>`;
   }
+
+  hours.forEach((x, i) => {
+    if (x.hour % 6 !== 0) return;
+    s += `<line x1="${xi(i)}" y1="${TOP}" x2="${xi(i)}" y2="${PR_B}" class="mg-vgrid"/>`;
+    s += `<text x="${xi(i)}" y="${HR_Y}" class="mg-ax" text-anchor="middle">${String(x.hour).padStart(2, "0")}</text>`;
+    s += `<text x="${xi(i)}" y="${H - 5}" class="mg-ax" text-anchor="middle">${String(x.hour).padStart(2, "0")}</text>`;
+  });
 
   const grid = y => `<line x1="0" y1="${y}" x2="${W}" y2="${y}" class="mg-grid"/>`;
 
@@ -408,9 +409,9 @@ function renderMeteograms(wx) {
   const plotW = Math.round(days.length * dayW);
   const { axis, plot } = buildMeteogram(all, plotW);
 
-  el.innerHTML = `<div class="card wx-cont">
-    ${head}
-    <div class="mg-readout" id="mgReadout"></div>
+  el.innerHTML = `${head}
+  <div class="mg-readout" id="mgReadout"></div>
+  <div class="card wx-cont">
     <div class="mg-frame">
       ${axis}
       <div class="mg-scroll">${plot}</div>
@@ -431,15 +432,24 @@ function deriveWarnings(wx) {
   const days = groupDays(wx);
   const all = days.flatMap(d => d.hours);
   const warns = [];
+
+  const peakWind = all.reduce((a, x) => x.wind > a.wind ? x : a, all[0] || { wind: 0 });
   const peakGust = all.reduce((a, x) => x.gust > a.gust ? x : a, all[0] || { gust: 0 });
-  if (peakGust.gust >= 34) warns.push({ level: "r", title: "Olujni udari vjetra",
-    detail: `${windName(peakGust.dir, peakGust.gust)} — udari do ${Math.round(peakGust.gust)} čv`, when: peakGust.t });
-  else if (peakGust.gust >= 25) warns.push({ level: "a", title: "Jak vjetar / jaki udari",
-    detail: `${windName(peakGust.dir, peakGust.gust)} — udari do ${Math.round(peakGust.gust)} čv`, when: peakGust.t });
+  if (peakGust.gust >= 25 || peakWind.wind >= 17) {
+    const pk = peakGust.gust >= 25 ? peakGust : peakWind;
+    warns.push({ level: "r", title: "Jak vjetar",
+      detail: `${windName(pk.dir, pk.gust)} — vjetar do ${Math.round(pk.wind)} čv, udari do ${Math.round(pk.gust)} čv`, when: pk.t });
+  } else if (peakGust.gust >= 18 || peakWind.wind >= 11) {
+    const pk = peakGust.gust >= 18 ? peakGust : peakWind;
+    warns.push({ level: "a", title: "Umjeren vjetar",
+      detail: `${windName(pk.dir, pk.gust)} — vjetar do ${Math.round(pk.wind)} čv, udari do ${Math.round(pk.gust)} čv`, when: pk.t });
+  }
 
   const waveVals = all.filter(x => x.wave != null);
   const peakWave = waveVals.reduce((a, x) => x.wave > (a.wave || 0) ? x : a, waveVals[0] || { wave: 0 });
-  if (peakWave.wave >= 1.5) warns.push({ level: "a", title: "Valovito more",
+  if (peakWave.wave >= 1.25) warns.push({ level: "r", title: "Valovito more",
+    detail: `valovi do ${peakWave.wave.toFixed(1)} m`, when: peakWave.t });
+  else if (peakWave.wave >= 0.6) warns.push({ level: "a", title: "Umjereni valovi",
     detail: `valovi do ${peakWave.wave.toFixed(1)} m`, when: peakWave.t });
 
   const peakRain = all.reduce((a, x) => (x.precip || 0) > (a.precip || 0) ? x : a, all[0] || { precip: 0 });
@@ -618,6 +628,16 @@ async function selectSpot(id) {
   if (spot) await loadWeather(spot.lat, spot.lon, spot.name);
 }
 
+// ================= Radar =================
+function wireRadar() {
+  const btn = document.getElementById("btn-radar-refresh");
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    const img = document.getElementById("dhmz-radar-img");
+    if (img) img.src = "https://vrijeme.hr/kompozit-stat.png?" + Date.now();
+  });
+}
+
 // ================= UI wiring =================
 function wireTabs() {
   const tabs = document.querySelectorAll(".tab");
@@ -794,6 +814,7 @@ async function boot() {
   wireRegion();
   wireModel();
   wireVodicTab();
+  wireRadar();
   await setRegion(state.regions[0].id);
   locateUser({ silent: true });
   state.dhmz = await fetchDhmz();

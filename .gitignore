@@ -10,3 +10,4 @@ android/build/
 *.keystore
 *.jks
 keystore.properties
+screenshots/

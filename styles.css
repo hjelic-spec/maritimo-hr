@@ -100,6 +100,21 @@ body {
 .info-card ul { margin: 4px 0 0; padding-left: 18px; }
 .info-card li { font-size: 14px; line-height: 1.55; color: var(--ink); margin-bottom: 7px; }
 .info-card a { color: var(--sea); font-weight: 600; text-decoration: none; }
+.radar-img {
+  width: 100%; border-radius: 10px; display: block;
+  background: var(--bg); min-height: 180px;
+}
+.radar-controls {
+  display: flex; gap: 8px; margin-top: 10px;
+}
+.radar-btn {
+  flex: 1; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--sea); font-size: 13px; font-weight: 600;
+  cursor: pointer; text-align: center; text-decoration: none; display: inline-block;
+  transition: background .15s;
+}
+.radar-btn:hover { background: var(--line); }
+
 .info-note { font-size: 13px !important; color: var(--muted) !important; margin-top: 10px !important; }
 .info-disclaimer { padding: 16px; background: #fefbf4; border: 1px solid #efe3c8; border-radius: 14px; }
 .info-disclaimer h2 { margin: 0 0 8px; font-size: 17px; color: #a07820; }
@@ -165,8 +180,8 @@ body {
 .mg-wind { fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .mg-warrow line { stroke: #5f7f9e; stroke-width: 1.4; stroke-linecap: round; }
 .mg-warrow path { fill: #5f7f9e; }
-.mg-limit-a { stroke: var(--amber); stroke-width: 1.5; stroke-dasharray: 6 3; }
-.mg-limit-r { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 3; }
+.mg-limit-a { stroke: var(--amber); stroke-width: 1; stroke-dasharray: 5 3; }
+.mg-limit-r { stroke: var(--red); stroke-width: 1; }
 .mg-wave-fill { fill: rgba(27,175,122,.11); stroke: none; }
 .mg-wave { fill: none; stroke: #1baf7a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .mg-pres { fill: none; stroke: #4a3aa7; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -185,7 +200,9 @@ body {
 /* Fiksni okvir s detaljima iznad meteograma */
 .mg-readout {
   border: 1px solid var(--line); border-radius: 12px; background: #f8fafc;
-  padding: 10px 13px; margin-bottom: 11px;
+  padding: 10px 13px;
+  position: sticky; top: 0; z-index: 10;
+  box-shadow: 0 2px 8px rgba(44, 79, 110, 0.1);
 }
 .ro-head {
   font-size: 13.5px; font-weight: 700; color: var(--ink);
