@@ -148,7 +148,6 @@ body {
 .wx-day-seg { flex: 1; min-width: 170px; }
 .wx-seg-row { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
 .wx-seg-badges { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.wx-badges { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 .warn-chip { font-size: 11px; font-weight: 800; padding: 4px 9px; border-radius: 20px; color: #fff; white-space: nowrap; }
 .warn-chip.a { background: var(--amber); }
 .warn-chip.r { background: var(--red); }
@@ -158,8 +157,6 @@ body {
 .wx-warn-row { padding: 2px 0; }
 .wx-warn-detail { color: var(--muted); font-size: 12px; margin-top: 1px; }
 .wx-warn-link { display: inline-block; margin-top: 5px; font-size: 12px; color: var(--sea); font-weight: 600; text-decoration: none; }
-.wx-stats { font-size: 12px; color: var(--muted); margin: 6px 0 4px; }
-.wx-stats b { color: var(--ink); }
 .mg-frame { display: flex; align-items: flex-start; }
 .mg-axis { flex: 0 0 auto; display: block; }
 .mg-scroll { flex: 1 1 auto; position: relative; overflow-x: auto; overflow-y: visible; -webkit-overflow-scrolling: touch; }
@@ -167,7 +164,6 @@ body {
 .mg-hint { text-align: center; font-size: 11px; color: var(--muted); margin-top: 4px; }
 .mg-model { text-align: center; font-size: 11px; color: var(--muted); margin-top: 6px; }
 .mg-model b { color: var(--ink); font-weight: 700; }
-.mg { width: 100%; height: auto; display: block; cursor: crosshair; }
 /* Validirana data-viz paleta (dataviz skill · CVD-provjereno) */
 .mg-band { fill: #f7f9fb; }
 .mg-ax { font-size: 8.5px; fill: #898781; font-variant-numeric: tabular-nums; }

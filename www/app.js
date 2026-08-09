@@ -438,11 +438,11 @@ function deriveWarnings(wx) {
   if (peakGust.gust >= 25 || peakWind.wind >= 17) {
     const pk = peakGust.gust >= 25 ? peakGust : peakWind;
     warns.push({ level: "r", title: "Jak vjetar",
-      detail: `${windName(pk.dir, pk.gust)} — vjetar do ${Math.round(pk.wind)} čv, udari do ${Math.round(pk.gust)} čv`, when: pk.t });
+      detail: `${windName(pk.dir, pk.wind)} — vjetar do ${Math.round(pk.wind)} čv, udari do ${Math.round(pk.gust)} čv`, when: pk.t });
   } else if (peakGust.gust >= 18 || peakWind.wind >= 11) {
     const pk = peakGust.gust >= 18 ? peakGust : peakWind;
     warns.push({ level: "a", title: "Umjeren vjetar",
-      detail: `${windName(pk.dir, pk.gust)} — vjetar do ${Math.round(pk.wind)} čv, udari do ${Math.round(pk.gust)} čv`, when: pk.t });
+      detail: `${windName(pk.dir, pk.wind)} — vjetar do ${Math.round(pk.wind)} čv, udari do ${Math.round(pk.gust)} čv`, when: pk.t });
   }
 
   const waveVals = all.filter(x => x.wave != null);
