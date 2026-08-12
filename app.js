@@ -47,7 +47,7 @@ function beaufort(kn) {
 }
 
 const SEA_STATE = [
-  [0,    "mirno"],
+  [0.01, "mirno"],
   [0.1,  "gotovo mirno"],
   [0.5,  "malo valovito"],
   [1.25, "umjereno valovito"],
@@ -966,6 +966,7 @@ function drawWindRose(hour) {
   }
 
   const dirIdx = hour ? COMPASS.indexOf(dirTo8(hour.dir)) : -1;
+  const col = hour ? wrColor(hour.wind, hour.gust) : null;
 
   if (hour) {
     // wind direction wedge
@@ -973,7 +974,6 @@ function drawWindRose(hour) {
     const halfWedge = 22.5 * Math.PI / 180;
     const intensity = wrIntensity(hour.wind);
     const wedgeR = innerR + (R - innerR) * Math.max(0.08, intensity);
-    const col = wrColor(hour.wind, hour.gust);
 
     ctx.beginPath();
     ctx.moveTo(cx, cy);
@@ -1061,20 +1061,38 @@ function drawWindRose(hour) {
     return;
   }
 
+  // wind name
+  ctx.fillStyle = "#2c4f6e";
+  ctx.font = "800 14px Inter, system-ui, sans-serif";
+  ctx.fillText(ARROWS[dirTo8(hour.dir)] + " " + windName(hour.dir, hour.wind), cx, cy - 30);
+
+  // wind speed
+  ctx.fillStyle = col.stroke;
+  ctx.font = "700 13px Inter, system-ui, sans-serif";
+  ctx.fillText(Math.round(hour.wind) + " (udari " + Math.round(hour.gust) + ") čv", cx, cy - 14);
+
   // wave
   ctx.fillStyle = "#1baf7a";
-  ctx.font = "800 17px Inter, system-ui, sans-serif";
-  ctx.fillText("🌊 " + (hour.wave != null ? hour.wave.toFixed(1) + " m" : "—"), cx, cy - 18);
+  ctx.font = "800 14px Inter, system-ui, sans-serif";
+  ctx.fillText("🌊 " + (hour.wave != null ? hour.wave.toFixed(1) + " m" : "—"), cx, cy + 4);
 
-  // temp
+  // sea state
+  const ss = hour.wave != null ? seaState(hour.wave) : null;
+  if (ss) {
+    ctx.fillStyle = "#1baf7a";
+    ctx.font = "600 11px Inter, system-ui, sans-serif";
+    ctx.fillText(ss.label, cx, cy + 19);
+  }
+
+  // air temp + sea temp
   ctx.fillStyle = "#eb6834";
-  ctx.font = "700 13px Inter, system-ui, sans-serif";
-  ctx.fillText("🌡 " + (hour.temp != null ? Math.round(hour.temp) + "°" : "—") + " / " + (hour.sea != null ? Math.round(hour.sea) + "°" : "—"), cx, cy + 4);
+  ctx.font = "700 12px Inter, system-ui, sans-serif";
+  ctx.fillText("🌡 " + (hour.temp != null ? Math.round(hour.temp) + "°" : "—") + "   🌊 " + (hour.sea != null ? Math.round(hour.sea) + "°" : "—"), cx, cy + 34);
 
   // rain
   ctx.fillStyle = "#5598e7";
-  ctx.font = "700 12px Inter, system-ui, sans-serif";
-  ctx.fillText("🌧 " + (hour.precip || 0).toFixed(1) + " mm", cx, cy + 22);
+  ctx.font = "700 11px Inter, system-ui, sans-serif";
+  ctx.fillText("🌧 " + (hour.precip || 0).toFixed(1) + " mm", cx, cy + 49);
 }
 
 function updateWindRoseInfo(hour) {

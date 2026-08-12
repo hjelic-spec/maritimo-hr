@@ -87,11 +87,9 @@ body {
 .main { flex: 1; display: flex; min-height: 0; }
 .tabpane { display: none; flex: 1; min-height: 0; }
 .tabpane.active { display: flex; }
-#tab-vrijeme.active { display: block; overflow-y: auto; }
-#tab-info.active { display: block; overflow-y: auto; }
-#tab-dhmz.active { display: block; overflow-y: auto; }
-#tab-vodic.active { display: block; overflow-y: auto; }
-#tab-ruza.active { display: block; overflow-y: auto; }
+#tab-vrijeme.active, #tab-info.active, #tab-dhmz.active, #tab-vodic.active, #tab-ruza.active {
+  display: block; overflow-y: auto;
+}
 
 /* Info tab */
 .info-scroll { max-width: 680px; margin: 0 auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }

@@ -32,6 +32,7 @@
   <!-- Tabs -->
   <nav class="tabbar">
     <button class="tab active" data-tab="vrijeme">🌤️ Vrijeme</button>
+    <button class="tab" data-tab="ruza">🧭 Ruža</button>
     <button class="tab" data-tab="dhmz">🇭🇷 DHMZ</button>
     <button class="tab" data-tab="vodic">📒 Vodič</button>
     <button class="tab" data-tab="info">ℹ️ Info</button>
@@ -40,6 +41,7 @@
   <main class="main">
     <!-- TAB: VRIJEME -->
     <section class="tabpane active" id="tab-vrijeme">
+      <div class="ptr-indicator" id="ptrIndicator">↓ Povuci za osvježavanje</div>
       <div class="wx-scroll">
         <div class="picker">
           <label for="wxSelect">Lokacija prognoze</label>
@@ -67,6 +69,32 @@
           ⚠️ <strong>Demo.</strong> Prognoza i meteogrami: Open-Meteo. Oznake isplovljavanja i
           upozorenja su <strong>automatski izračun</strong>, nisu službeni. Prije isplovljenja
           provjerite <a id="dhmzLink" href="https://meteo.hr/naslovnica_upozorenja.php" target="_blank" rel="noopener">službena upozorenja DHMZ-a</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- TAB: RUŽA VJETROVA -->
+    <section class="tabpane" id="tab-ruza">
+      <div class="wr-scroll">
+        <div class="wr-slider-box">
+          <button class="wr-arrow" id="wrPrev" title="Prethodni sat">◀</button>
+          <div class="wr-time" id="wrTime">—</div>
+          <button class="wr-arrow" id="wrNext" title="Sljedeći sat">▶</button>
+        </div>
+        <input type="range" id="wrSlider" class="wr-slider" min="0" max="71" value="0">
+        <div class="wr-canvas-wrap">
+          <canvas id="wrCanvas" width="380" height="380"></canvas>
+          <div class="wr-hint">dodirnite sredinu za osvježavanje</div>
+        </div>
+        <div class="wr-center-info card" id="wrInfo">
+          <div class="wr-info-row" id="wrWindInfo"></div>
+          <div class="wr-info-row" id="wrWaveInfo"></div>
+          <div class="wr-info-row" id="wrTempInfo"></div>
+          <div class="wr-info-row" id="wrRainInfo"></div>
+        </div>
+        <p class="disclaimer">
+          Ruža vjetrova prikazuje smjer i jačinu vjetra iz prognoze (Open-Meteo).
+          Pomičite klizač za pregled po satima (3 dana).
         </p>
       </div>
     </section>
@@ -184,6 +212,24 @@
           </select>
           <p class="info-note">Različiti modeli mogu dati različite rezultate; „Automatski" spaja
           najbolji dostupni. Odabir se pamti i odmah osvježava meteogram.</p>
+        </div>
+
+        <div class="card info-card">
+          <h3>🧭 Ruža vjetrova</h3>
+          <ul>
+            <li>Prikazuje <strong>smjer i jačinu vjetra</strong> na interaktivnoj kompasnoj ruži
+            s hrvatskim imenima vjetrova (Bura, Jugo, Maestral…).</li>
+            <li><strong>Klizač</strong> na vrhu — pomičite za pregled po satima (3 dana prognoze).</li>
+            <li><strong>Boja klina</strong> odgovara semaforskoj procjeni:
+            zelena (povoljno), žuta (oprez), crvena (nepovoljno).</li>
+            <li><strong>Isprekidani luk</strong> oko klina prikazuje jačinu udara vjetra.</li>
+            <li><strong>Sredina kruga</strong> — naziv vjetra i brzina (stalni/udari) u boji semafora,
+            visina valova sa stanjem mora, temperatura zraka i mora, oborina.</li>
+            <li><strong>Dodirnite sredinu</strong> za osvježavanje podataka i prikaz trenutnog stanja
+            (interpolirani model, ne mjerena postaja).</li>
+            <li>Oznaka <strong>⚡ model · sada</strong> znači da se prikazuje najnoviji podatak iz modela;
+            <strong>📊 prognoza</strong> znači podatak iz satne prognoze.</li>
+          </ul>
         </div>
 
         <div class="card info-card">

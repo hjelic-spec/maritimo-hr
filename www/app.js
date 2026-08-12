@@ -47,7 +47,7 @@ function beaufort(kn) {
 }
 
 const SEA_STATE = [
-  [0,    "mirno"],
+  [0.01, "mirno"],
   [0.1,  "gotovo mirno"],
   [0.5,  "malo valovito"],
   [1.25, "umjereno valovito"],
@@ -69,13 +69,14 @@ const state = { spots: [], center: { lat: 44.72, lon: 14.55 }, active: null,
   wx: null, dhmz: undefined, mgDays: [], mgHours: [],
   capitanies: [], regions: [], regionId: null, regionRe: /$^/, mgDefaultIdx: 0,
   fuelStations: [], vodicFilter: "all",
-  model: (typeof localStorage !== "undefined" && localStorage.getItem("mgModel")) || "best_match" };
+  model: (typeof localStorage !== "undefined" && localStorage.getItem("mgModel")) || "best_match",
+  wrIdx: 0 };
 
 // ================= WEATHER =================
 async function fetchWeather(lat, lon) {
   const modelParam = state.model && state.model !== "best_match" ? `&models=${state.model}` : "";
   const fUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-    `&current=wind_speed_10m,wind_gusts_10m,wind_direction_10m` +
+    `&current=wind_speed_10m,wind_gusts_10m,wind_direction_10m,temperature_2m,precipitation,cloud_cover` +
     `&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m,precipitation,cloud_cover,pressure_msl,temperature_2m` +
     `&wind_speed_unit=kn&timezone=Europe%2FZagreb&forecast_days=3` + modelParam;
   const mUrl = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}` +
@@ -429,8 +430,7 @@ function renderMeteograms(wx) {
 
 // ---- Izvedena upozorenja (iz prognoze) ----
 function deriveWarnings(wx) {
-  const days = groupDays(wx);
-  const all = days.flatMap(d => d.hours);
+  const all = state.mgHours.length ? state.mgHours : groupDays(wx).flatMap(d => d.hours);
   const warns = [];
 
   const peakWind = all.reduce((a, x) => x.wind > a.wind ? x : a, all[0] || { wind: 0 });
@@ -594,6 +594,7 @@ async function loadWeather(lat, lon, name) {
   state.wx = { ...w, name, lat, lon };
   renderWarnings(state.wx, state.dhmz);   // state.dhmz: undefined dok se ne učita
   renderMeteograms(state.wx);
+  refreshWindRose();
   return state.wx;
 }
 
@@ -652,6 +653,9 @@ function wireTabs() {
     pane.classList.add("active");
     if (pushHistory && location.hash.slice(1) !== name) {
       history.pushState({ tab: name }, "", "#" + name);
+    }
+    if (name === "ruza" && (state.mgHours || []).length) {
+      setTimeout(() => drawWindRose((state.mgHours || [])[state.wrIdx || 0]), 50);
     }
   }
 
@@ -800,6 +804,54 @@ function wireVodicTab() {
   });
 }
 
+// ================= PULL-TO-REFRESH =================
+function wirePullToRefresh() {
+  const pane = document.getElementById("tab-vrijeme");
+  if (!pane) return;
+  const indicator = document.getElementById("ptrIndicator");
+  let startY = 0, pulling = false, triggered = false;
+
+  pane.addEventListener("touchstart", e => {
+    if (pane.scrollTop > 5) return;
+    startY = e.touches[0].clientY;
+    pulling = true;
+    triggered = false;
+  }, { passive: true });
+
+  pane.addEventListener("touchmove", e => {
+    if (!pulling) return;
+    const dy = e.touches[0].clientY - startY;
+    if (dy < 0) { indicator.classList.remove("pulling"); return; }
+    if (pane.scrollTop > 0) return;
+    const progress = Math.min(dy / 80, 1);
+    if (progress >= 1) {
+      indicator.textContent = "↑ Pusti za osvježavanje";
+      triggered = true;
+    } else {
+      indicator.textContent = "↓ Povuci za osvježavanje";
+      triggered = false;
+    }
+    indicator.classList.add("pulling");
+  }, { passive: true });
+
+  pane.addEventListener("touchend", async () => {
+    if (!pulling) return;
+    pulling = false;
+    if (triggered && state.wx) {
+      indicator.textContent = "⏳ Osvježavam…";
+      indicator.classList.remove("pulling");
+      indicator.classList.add("refreshing");
+      await loadWeather(state.wx.lat, state.wx.lon, state.wx.name);
+      state.dhmz = await fetchDhmz();
+      if (state.wx) renderWarnings(state.wx, state.dhmz);
+      indicator.textContent = "✓ Ažurirano";
+      setTimeout(() => { indicator.classList.remove("refreshing"); }, 800);
+    } else {
+      indicator.classList.remove("pulling");
+    }
+  });
+}
+
 // ================= BOOT =================
 async function boot() {
   wireTabs();
@@ -815,10 +867,335 @@ async function boot() {
   wireModel();
   wireVodicTab();
   wireRadar();
+  wireWindRose();
+  wirePullToRefresh();
   await setRegion(state.regions[0].id);
   locateUser({ silent: true });
   state.dhmz = await fetchDhmz();
-  if (state.wx) { renderWarnings(state.wx, state.dhmz); renderMeteograms(state.wx); }
+  if (state.wx) renderWarnings(state.wx, state.dhmz);
+}
+
+// ================= RUŽA VJETROVA (Wind Rose) =================
+const WR_WINDS = [
+  { dir: "N",  deg: 0,   name: "Tramontana" },
+  { dir: "NE", deg: 45,  name: "Bura" },
+  { dir: "E",  deg: 90,  name: "Levanat" },
+  { dir: "SE", deg: 135, name: "Jugo" },
+  { dir: "S",  deg: 180, name: "Oštro" },
+  { dir: "SW", deg: 225, name: "Lebić" },
+  { dir: "W",  deg: 270, name: "Pulenat" },
+  { dir: "NW", deg: 315, name: "Maestral" }
+];
+
+function buildCurrentHour(wx) {
+  if (!wx || !wx.fc || !wx.fc.current) return null;
+  const fc = wx.fc.current;
+  const mar = (wx.mar && wx.mar.current) || {};
+  const t = new Date(fc.time);
+  return {
+    t,
+    hour: t.getHours(),
+    wind: fc.wind_speed_10m,
+    gust: fc.wind_gusts_10m,
+    dir: fc.wind_direction_10m,
+    temp: fc.temperature_2m != null ? fc.temperature_2m : null,
+    precip: fc.precipitation != null ? fc.precipitation : 0,
+    cloud: fc.cloud_cover != null ? fc.cloud_cover : null,
+    pres: null,
+    wave: mar.wave_height != null ? mar.wave_height : null,
+    sea: mar.sea_surface_temperature != null ? mar.sea_surface_temperature : null,
+    isCurrent: true
+  };
+}
+
+function wrColor(windKn, gustKn) {
+  if (windKn >= 17 || gustKn >= 25) return { fill: "rgba(212,122,111,0.85)", stroke: "#b54040", level: "r" };
+  if (windKn >= 11 || gustKn >= 18) return { fill: "rgba(212,160,58,0.85)", stroke: "#96721a", level: "a" };
+  return { fill: "rgba(74,171,130,0.85)", stroke: "#1d8a4e", level: "g" };
+}
+
+function wrIntensity(windKn) {
+  return Math.min(1, windKn / 35);
+}
+
+function drawWindRose(hour) {
+  const canvas = document.getElementById("wrCanvas");
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const size = Math.round(rect.width);
+  if (size < 10) return;
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const cx = size / 2, cy = size / 2;
+  const outerPad = size * 0.09;
+  const R = size * 0.5 - outerPad;
+  const nameR = R - 8;
+  const innerR = size * 0.18;
+
+  ctx.clearRect(0, 0, size, size);
+
+  // outer circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, 0, Math.PI * 2);
+  ctx.strokeStyle = "#c0ced8";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // ring guides
+  [0.33, 0.66, 1.0].forEach(f => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, innerR + (R - innerR) * f, 0, Math.PI * 2);
+    ctx.strokeStyle = "#e8eff5";
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  });
+
+  // direction lines
+  for (let i = 0; i < 8; i++) {
+    const ang = (i * 45 - 90) * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(cx + innerR * 0.6 * Math.cos(ang), cy + innerR * 0.6 * Math.sin(ang));
+    ctx.lineTo(cx + R * Math.cos(ang), cy + R * Math.sin(ang));
+    ctx.strokeStyle = "#e2e8ee";
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  }
+
+  const dirIdx = hour ? COMPASS.indexOf(dirTo8(hour.dir)) : -1;
+  const col = hour ? wrColor(hour.wind, hour.gust) : null;
+
+  if (hour) {
+    // wind direction wedge
+    const centerAng = (dirIdx * 45 - 90) * Math.PI / 180;
+    const halfWedge = 22.5 * Math.PI / 180;
+    const intensity = wrIntensity(hour.wind);
+    const wedgeR = innerR + (R - innerR) * Math.max(0.08, intensity);
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, wedgeR, centerAng - halfWedge, centerAng + halfWedge);
+    ctx.closePath();
+    ctx.fillStyle = col.fill;
+    ctx.fill();
+    ctx.strokeStyle = col.stroke;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // gust ring
+    if (hour.gust > hour.wind) {
+      const gustR = innerR + (R - innerR) * Math.max(0.08, wrIntensity(hour.gust));
+      ctx.beginPath();
+      ctx.arc(cx, cy, gustR, centerAng - halfWedge, centerAng + halfWedge);
+      ctx.strokeStyle = col.stroke;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 3]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // arrow in wedge
+    const arrowR = wedgeR * 0.7;
+    const tipR = wedgeR - 6;
+    const perpAng = centerAng + Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx + tipR * Math.cos(centerAng), cy + tipR * Math.sin(centerAng));
+    ctx.lineTo(cx + arrowR * Math.cos(centerAng) + 5 * Math.cos(perpAng),
+               cy + arrowR * Math.sin(centerAng) + 5 * Math.sin(perpAng));
+    ctx.lineTo(cx + arrowR * Math.cos(centerAng) - 5 * Math.cos(perpAng),
+               cy + arrowR * Math.sin(centerAng) - 5 * Math.sin(perpAng));
+    ctx.closePath();
+    ctx.fillStyle = "#fff";
+    ctx.fill();
+  }
+
+  // direction labels inside, wind names outside
+  const labelR = R + outerPad * 0.5;
+  WR_WINDS.forEach((w, i) => {
+    const ang = (w.deg - 90) * Math.PI / 180;
+    const isActive = i === dirIdx;
+    let rot = w.deg;
+    if (rot > 90 && rot < 270) rot += 180;
+    const rotRad = rot * Math.PI / 180;
+
+    ctx.save();
+    ctx.translate(cx + nameR * Math.cos(ang), cy + nameR * Math.sin(ang));
+    ctx.rotate(rotRad);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = isActive ? "800 13px Inter, system-ui, sans-serif" : "700 12px Inter, system-ui, sans-serif";
+    ctx.fillStyle = isActive ? "#2c4f6e" : "#6b8da8";
+    ctx.fillText(w.dir, 0, 0);
+    ctx.restore();
+
+    ctx.save();
+    ctx.translate(cx + labelR * Math.cos(ang), cy + labelR * Math.sin(ang));
+    ctx.rotate(rotRad);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = isActive ? "800 11px Inter, system-ui, sans-serif" : "600 10px Inter, system-ui, sans-serif";
+    ctx.fillStyle = isActive ? "#2c4f6e" : "#8a9fb5";
+    ctx.fillText(w.name, 0, 0);
+    ctx.restore();
+  });
+
+  // center info circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, innerR - 2, 0, Math.PI * 2);
+  ctx.fillStyle = "#fff";
+  ctx.fill();
+  ctx.strokeStyle = "#d0dde8";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  if (!hour) {
+    ctx.fillStyle = "#8a9fb5";
+    ctx.font = "500 13px Inter, system-ui, sans-serif";
+    ctx.fillText("Učitaj prognozu", cx, cy);
+    return;
+  }
+
+  // wind name
+  ctx.fillStyle = "#2c4f6e";
+  ctx.font = "800 14px Inter, system-ui, sans-serif";
+  ctx.fillText(ARROWS[dirTo8(hour.dir)] + " " + windName(hour.dir, hour.wind), cx, cy - 30);
+
+  // wind speed
+  ctx.fillStyle = col.stroke;
+  ctx.font = "700 13px Inter, system-ui, sans-serif";
+  ctx.fillText(Math.round(hour.wind) + " (udari " + Math.round(hour.gust) + ") čv", cx, cy - 14);
+
+  // wave
+  ctx.fillStyle = "#1baf7a";
+  ctx.font = "800 14px Inter, system-ui, sans-serif";
+  ctx.fillText("🌊 " + (hour.wave != null ? hour.wave.toFixed(1) + " m" : "—"), cx, cy + 4);
+
+  // sea state
+  const ss = hour.wave != null ? seaState(hour.wave) : null;
+  if (ss) {
+    ctx.fillStyle = "#1baf7a";
+    ctx.font = "600 11px Inter, system-ui, sans-serif";
+    ctx.fillText(ss.label, cx, cy + 19);
+  }
+
+  // air temp + sea temp
+  ctx.fillStyle = "#eb6834";
+  ctx.font = "700 12px Inter, system-ui, sans-serif";
+  ctx.fillText("🌡 " + (hour.temp != null ? Math.round(hour.temp) + "°" : "—") + "   🌊 " + (hour.sea != null ? Math.round(hour.sea) + "°" : "—"), cx, cy + 34);
+
+  // rain
+  ctx.fillStyle = "#5598e7";
+  ctx.font = "700 11px Inter, system-ui, sans-serif";
+  ctx.fillText("🌧 " + (hour.precip || 0).toFixed(1) + " mm", cx, cy + 49);
+}
+
+function updateWindRoseInfo(hour) {
+  if (!hour) return;
+  const bf = beaufort(hour.wind);
+  const col = wrColor(hour.wind, hour.gust);
+
+  const srcLabel = hour.isCurrent
+    ? `<span class="wr-src wr-src-live">⚡ model · sada</span>`
+    : `<span class="wr-src">📊 prognoza</span>`;
+
+  document.getElementById("wrWindInfo").innerHTML =
+    `<span class="wr-dot" style="background:${col.stroke}"></span>` +
+    `<span class="wr-ik">Vjetar</span>` +
+    `<span class="wr-iv">${ARROWS[dirTo8(hour.dir)]} ${windName(hour.dir, hour.wind)} · ${Math.round(hour.wind)} čv (udari ${Math.round(hour.gust)}) · Bf ${bf.n} ${srcLabel}</span>`;
+
+  const ss = hour.wave != null ? seaState(hour.wave) : null;
+  document.getElementById("wrWaveInfo").innerHTML =
+    `<span class="wr-dot" style="background:#1baf7a"></span>` +
+    `<span class="wr-ik">Valovi</span>` +
+    `<span class="wr-iv">${hour.wave != null ? hour.wave.toFixed(2) + " m" : "—"}${ss ? " · " + ss.label : ""}</span>`;
+
+  document.getElementById("wrTempInfo").innerHTML =
+    `<span class="wr-dot" style="background:#eb6834"></span>` +
+    `<span class="wr-ik">Temperatura</span>` +
+    `<span class="wr-iv">zrak ${hour.temp != null ? Math.round(hour.temp) + "°" : "—"} · more ${hour.sea != null ? Math.round(hour.sea) + "°" : "—"}</span>`;
+
+  document.getElementById("wrRainInfo").innerHTML =
+    `<span class="wr-dot" style="background:#5598e7"></span>` +
+    `<span class="wr-ik">Oborina</span>` +
+    `<span class="wr-iv">${(hour.precip || 0).toFixed(1)} mm · oblaci ${Math.round(hour.cloud)}%</span>`;
+}
+
+function updateWindRoseTime(idx) {
+  const hours = state.mgHours || [];
+  if (!hours.length) return;
+  idx = Math.max(0, Math.min(idx, hours.length - 1));
+  state.wrIdx = idx;
+  const h = hours[idx];
+  const timeEl = document.getElementById("wrTime");
+  if (timeEl && h) {
+    const dn = KRAT_DAN[h.t.getDay()];
+    timeEl.textContent = `${dn} ${h.t.getDate()}.${h.t.getMonth() + 1}. · ${String(h.hour).padStart(2, "0")}:00`;
+  }
+  const slider = document.getElementById("wrSlider");
+  if (slider) { slider.max = hours.length - 1; slider.value = idx; }
+  drawWindRose(h);
+  updateWindRoseInfo(h);
+}
+
+function showWindRoseCurrent() {
+  const cur = buildCurrentHour(state.wx);
+  if (!cur) return;
+  const hours = state.mgHours || [];
+  const now = new Date();
+  let di = hours.findIndex(h => h.t >= now);
+  if (di < 0) di = 0;
+  state.wrIdx = di;
+  const slider = document.getElementById("wrSlider");
+  if (slider) { slider.max = hours.length - 1; slider.value = di; }
+  const timeEl = document.getElementById("wrTime");
+  const ct = cur.t;
+  if (timeEl) timeEl.textContent = `⚡ Sada · ${String(ct.getHours()).padStart(2, "0")}:${String(ct.getMinutes()).padStart(2, "0")}`;
+  drawWindRose(cur);
+  updateWindRoseInfo(cur);
+}
+
+async function wrResetToNow() {
+  if (!state.wx) return;
+  const btn = document.getElementById("wrTime");
+  if (btn) btn.textContent = "⏳ Osvježavam…";
+  await loadWeather(state.wx.lat, state.wx.lon, state.wx.name);
+}
+
+function wireWindRose() {
+  const slider = document.getElementById("wrSlider");
+  if (!slider) return;
+  slider.addEventListener("input", () => updateWindRoseTime(+slider.value));
+  document.getElementById("wrPrev").addEventListener("click", () => {
+    updateWindRoseTime((state.wrIdx || 0) - 1);
+  });
+  document.getElementById("wrNext").addEventListener("click", () => {
+    updateWindRoseTime((state.wrIdx || 0) + 1);
+  });
+  const canvas = document.getElementById("wrCanvas");
+  canvas.addEventListener("click", e => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    const dist = Math.sqrt(x * x + y * y);
+    if (dist < rect.width * 0.18) wrResetToNow();
+  });
+  window.addEventListener("resize", () => {
+    if (document.getElementById("tab-ruza").classList.contains("active"))
+      drawWindRose((state.mgHours || [])[state.wrIdx || 0]);
+  });
+}
+
+function refreshWindRose() {
+  const hours = state.mgHours || [];
+  if (!hours.length) return;
+  showWindRoseCurrent();
 }
 
 boot();
+
