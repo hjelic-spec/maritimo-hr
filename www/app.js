@@ -909,7 +909,6 @@ function buildCurrentHour(wx) {
 }
 
 function wrColor(windKn, gustKn) {
-  const peak = Math.max(windKn, gustKn);
   if (windKn >= 17 || gustKn >= 25) {
     const t = Math.min(1, Math.max(0, (windKn - 19) / 16));
     const r = Math.round(212 - t * 80);
@@ -943,7 +942,6 @@ function drawWindRose(hour) {
   const cx = size / 2, cy = size / 2;
   const outerPad = size * 0.09;
   const R = size * 0.5 - outerPad;
-  const nameR = R - 8;
   const innerR = size * 0.18;
 
   ctx.clearRect(0, 0, size, size);
@@ -980,7 +978,7 @@ function drawWindRose(hour) {
   ctx.fillStyle = "#a0b0c0";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  [5, 10, 15, 20].forEach((kn, idx) => {
+  [5, 10, 15, 20].forEach(kn => {
     const frac = kn / 20;
     const prevFrac = (kn - 5) / 20;
     const midR = innerR + (R - innerR) * (frac + prevFrac) / 2;
@@ -988,8 +986,34 @@ function drawWindRose(hour) {
     ctx.fillText(kn, cx, cy - midR);
   });
 
+  // compass rose star background
+  const starOuter = R * 0.97;
+  const starInner = R * 0.38;
+  const starMid = innerR + (R - innerR) * 0.5;
+  // 8-point star: main 4 points (N,E,S,W) longer, intercardinal shorter
+  ctx.beginPath();
+  for (let i = 0; i < 8; i++) {
+    const ang = (i * 45 - 90) * Math.PI / 180;
+    const tipR = (i % 2 === 0) ? starOuter : starMid;
+    const notchR = starInner;
+    const notchAng = ((i * 45 - 90) - 22.5) * Math.PI / 180;
+    if (i === 0) {
+      ctx.moveTo(cx + notchR * Math.cos(notchAng), cy + notchR * Math.sin(notchAng));
+    }
+    ctx.lineTo(cx + tipR * Math.cos(ang), cy + tipR * Math.sin(ang));
+    const nextNotchAng = ((i * 45 - 90) + 22.5) * Math.PI / 180;
+    ctx.lineTo(cx + notchR * Math.cos(nextNotchAng), cy + notchR * Math.sin(nextNotchAng));
+  }
+  ctx.closePath();
+  ctx.fillStyle = "rgba(44,79,110,0.04)";
+  ctx.fill();
+  ctx.strokeStyle = "rgba(44,79,110,0.12)";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
   const dirIdx = hour ? COMPASS.indexOf(dirTo8(hour.dir)) : -1;
   const col = hour ? wrColor(hour.wind, hour.gust) : null;
+  const bf = hour ? beaufort(hour.wind) : null;
 
   if (hour) {
     // wind direction wedge
@@ -1035,7 +1059,6 @@ function drawWindRose(hour) {
     ctx.fill();
 
     // Beaufort label inside wedge (on top of arrow)
-    const bf = beaufort(hour.wind);
     const bfR = innerR + 18;
     ctx.save();
     ctx.translate(cx + bfR * Math.cos(centerAng), cy + bfR * Math.sin(centerAng));
@@ -1044,12 +1067,12 @@ function drawWindRose(hour) {
     ctx.fillStyle = "#000";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("Bf" + bf.n, 0, 0);
+    ctx.fillText("Bf " + bf.n, 0, 0);
     ctx.restore();
   }
 
   // direction labels (N, NE...) and wind names (Bura, Jugo...) outside circle
-  const dirR = R + 12;
+  const dirR = R + outerPad * 0.25;
   const labelR = R + outerPad * 0.5 + 6;
   WR_WINDS.forEach((w, i) => {
     const ang = (w.deg - 90) * Math.PI / 180;
@@ -1101,35 +1124,30 @@ function drawWindRose(hour) {
   // wind name
   ctx.fillStyle = "#2c4f6e";
   ctx.font = "800 14px Inter, system-ui, sans-serif";
-  ctx.fillText(ARROWS[dirTo8(hour.dir)] + " " + windName(hour.dir, hour.wind), cx, cy - 30);
+  ctx.fillText(ARROWS[dirTo8(hour.dir)] + " " + windName(hour.dir, hour.wind), cx, cy - 36);
 
   // wind speed
   ctx.fillStyle = col.stroke;
   ctx.font = "700 13px Inter, system-ui, sans-serif";
-  ctx.fillText(Math.round(hour.wind) + " (udari " + Math.round(hour.gust) + ") čv", cx, cy - 14);
+  ctx.fillText(Math.round(hour.wind) + " (udari " + Math.round(hour.gust) + ") čv", cx, cy - 20);
+
+  // wind state (Beaufort description)
+  ctx.fillStyle = col.stroke;
+  ctx.font = "600 11px Inter, system-ui, sans-serif";
+  ctx.fillText(bf.label + " (" + bf.n + ")", cx, cy - 6);
 
   // wave
   ctx.fillStyle = "#1baf7a";
   ctx.font = "800 14px Inter, system-ui, sans-serif";
-  ctx.fillText("🌊 " + (hour.wave != null ? hour.wave.toFixed(1) + " m" : "—"), cx, cy + 4);
+  ctx.fillText("🌊 " + (hour.wave != null ? hour.wave.toFixed(1) + " m" : "—"), cx, cy + 12);
 
   // sea state
   const ss = hour.wave != null ? seaState(hour.wave) : null;
   if (ss) {
     ctx.fillStyle = "#1baf7a";
     ctx.font = "600 11px Inter, system-ui, sans-serif";
-    ctx.fillText(ss.label, cx, cy + 19);
+    ctx.fillText(ss.label + " (" + ss.n + ")", cx, cy + 27);
   }
-
-  // air temp + sea temp
-  ctx.fillStyle = "#eb6834";
-  ctx.font = "700 12px Inter, system-ui, sans-serif";
-  ctx.fillText("🌡 " + (hour.temp != null ? Math.round(hour.temp) + "°" : "—") + "   🌊 " + (hour.sea != null ? Math.round(hour.sea) + "°" : "—"), cx, cy + 34);
-
-  // rain
-  ctx.fillStyle = "#5598e7";
-  ctx.font = "700 11px Inter, system-ui, sans-serif";
-  ctx.fillText("🌧 " + (hour.precip || 0).toFixed(1) + " mm", cx, cy + 49);
 }
 
 function updateWindRoseInfo(hour) {
