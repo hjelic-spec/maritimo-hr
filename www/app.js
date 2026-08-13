@@ -9,7 +9,7 @@ function dirTo8(deg) { return COMPASS[Math.round(deg / 45) % 8]; }
 const WIND_NAMES = { NE: "bura (NE)", N: "bura (N)", SE: "jugo (SE)", S: "jugo (S)",
   NW: "maestral (NW)", W: "zapadnjak (W)", SW: "lebić (SW)", E: "levant (E)" };
 function windName(deg, speedKn) {
-  if (speedKn < 3) return "slab / promjenjiv";
+  if (speedKn < 3) return "promjenjiv";
   const d = dirTo8(deg);
   return WIND_NAMES[d] || d;
 }
@@ -877,7 +877,7 @@ async function boot() {
 
 // ================= RUŽA VJETROVA (Wind Rose) =================
 const WR_WINDS = [
-  { dir: "N",  deg: 0,   name: "Tramontana" },
+  { dir: "N",  deg: 0,   name: "Tramuntana" },
   { dir: "NE", deg: 45,  name: "Bura" },
   { dir: "E",  deg: 90,  name: "Levanat" },
   { dir: "SE", deg: 135, name: "Jugo" },
@@ -909,13 +909,23 @@ function buildCurrentHour(wx) {
 }
 
 function wrColor(windKn, gustKn) {
-  if (windKn >= 17 || gustKn >= 25) return { fill: "rgba(212,122,111,0.85)", stroke: "#b54040", level: "r" };
+  const peak = Math.max(windKn, gustKn);
+  if (windKn >= 17 || gustKn >= 25) {
+    const t = Math.min(1, Math.max(0, (windKn - 19) / 16));
+    const r = Math.round(212 - t * 80);
+    const g = Math.round(122 - t * 72);
+    const b = Math.round(111 + t * 89);
+    const sr = Math.round(181 - t * 60);
+    const sg = Math.round(64 - t * 24);
+    const sb = Math.round(64 + t * 136);
+    return { fill: `rgba(${r},${g},${b},0.85)`, stroke: `rgb(${sr},${sg},${sb})`, level: "r" };
+  }
   if (windKn >= 11 || gustKn >= 18) return { fill: "rgba(212,160,58,0.85)", stroke: "#96721a", level: "a" };
   return { fill: "rgba(74,171,130,0.85)", stroke: "#1d8a4e", level: "g" };
 }
 
 function wrIntensity(windKn) {
-  return Math.min(1, windKn / 35);
+  return Math.min(1, windKn / 20);
 }
 
 function drawWindRose(hour) {
@@ -946,11 +956,11 @@ function drawWindRose(hour) {
   ctx.stroke();
 
   // ring guides
-  [0.33, 0.66, 1.0].forEach(f => {
+  [5, 10, 15, 20].forEach(kn => {
     ctx.beginPath();
-    ctx.arc(cx, cy, innerR + (R - innerR) * f, 0, Math.PI * 2);
-    ctx.strokeStyle = "#e8eff5";
-    ctx.lineWidth = 0.8;
+    ctx.arc(cx, cy, innerR + (R - innerR) * (kn / 20), 0, Math.PI * 2);
+    ctx.strokeStyle = "#e0e8f0";
+    ctx.lineWidth = 0.6;
     ctx.stroke();
   });
 
@@ -964,6 +974,19 @@ function drawWindRose(hour) {
     ctx.lineWidth = 0.8;
     ctx.stroke();
   }
+
+  // scale labels (5kt intervals) centered on guide rings, N axis only
+  ctx.font = "600 8px Inter, system-ui, sans-serif";
+  ctx.fillStyle = "#a0b0c0";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  [5, 10, 15, 20].forEach((kn, idx) => {
+    const frac = kn / 20;
+    const prevFrac = (kn - 5) / 20;
+    const midR = innerR + (R - innerR) * (frac + prevFrac) / 2;
+    // N axis (up) — centered between rings
+    ctx.fillText(kn, cx, cy - midR);
+  });
 
   const dirIdx = hour ? COMPASS.indexOf(dirTo8(hour.dir)) : -1;
   const col = hour ? wrColor(hour.wind, hour.gust) : null;
@@ -1010,10 +1033,24 @@ function drawWindRose(hour) {
     ctx.closePath();
     ctx.fillStyle = "#fff";
     ctx.fill();
+
+    // Beaufort label inside wedge (on top of arrow)
+    const bf = beaufort(hour.wind);
+    const bfR = innerR + 18;
+    ctx.save();
+    ctx.translate(cx + bfR * Math.cos(centerAng), cy + bfR * Math.sin(centerAng));
+    ctx.rotate(centerAng + Math.PI / 2);
+    ctx.font = "800 11px Inter, system-ui, sans-serif";
+    ctx.fillStyle = "#000";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Bf" + bf.n, 0, 0);
+    ctx.restore();
   }
 
-  // direction labels inside, wind names outside
-  const labelR = R + outerPad * 0.5;
+  // direction labels (N, NE...) and wind names (Bura, Jugo...) outside circle
+  const dirR = R + 12;
+  const labelR = R + outerPad * 0.5 + 6;
   WR_WINDS.forEach((w, i) => {
     const ang = (w.deg - 90) * Math.PI / 180;
     const isActive = i === dirIdx;
@@ -1022,7 +1059,7 @@ function drawWindRose(hour) {
     const rotRad = rot * Math.PI / 180;
 
     ctx.save();
-    ctx.translate(cx + nameR * Math.cos(ang), cy + nameR * Math.sin(ang));
+    ctx.translate(cx + dirR * Math.cos(ang), cy + dirR * Math.sin(ang));
     ctx.rotate(rotRad);
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
