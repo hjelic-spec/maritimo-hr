@@ -2,13 +2,202 @@
   "note": "DEMO podaci — ilustrativno, nije za navigaciju.",
   "regions": [
     {
+      "id": "istra",
+      "name": "Istra",
+      "center": {
+        "lat": 44.87,
+        "lon": 13.84
+      },
+      "dhmz": "istr|pul|rovinj|poreč|porec|umag|pazin|brijuni|medulin|rabac|novigrad",
+      "capitanies": [
+        {
+          "name": "Lučka kapetanija Pula",
+          "phone": "+385 52 222 037",
+          "vhf": "10"
+        }
+      ],
+      "spots": [
+        {
+          "id": "luka-pula",
+          "name": "Pula (luka)",
+          "type": "port",
+          "island": "kopno",
+          "lat": 44.8666,
+          "lon": 13.8496,
+          "notes": "Najveća luka Istre. ACI marina i gradska luka. Zaštićena od svih vjetrova."
+        },
+        {
+          "id": "aci-pula",
+          "name": "ACI marina Pula",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 44.8633,
+          "lon": 13.8425
+        },
+        {
+          "id": "luka-rovinj",
+          "name": "Rovinj",
+          "type": "port",
+          "island": "kopno",
+          "lat": 45.0811,
+          "lon": 13.6389,
+          "notes": "Slikovita luka. Marina i gradska riva. Zaštićena od bure, izložena jugu."
+        },
+        {
+          "id": "aci-rovinj",
+          "name": "ACI marina Rovinj",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 45.0797,
+          "lon": 13.6308
+        },
+        {
+          "id": "luka-porec",
+          "name": "Poreč",
+          "type": "port",
+          "island": "kopno",
+          "lat": 45.2269,
+          "lon": 13.5942,
+          "notes": "Gradska luka i marine. Zaštićena od bure."
+        },
+        {
+          "id": "marina-parentium",
+          "name": "Marina Parentium Poreč",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 45.2242,
+          "lon": 13.5914
+        },
+        {
+          "id": "luka-umag",
+          "name": "Umag",
+          "type": "port",
+          "island": "kopno",
+          "lat": 45.4353,
+          "lon": 13.5183,
+          "notes": "Najsjeverniji grad na Jadranu. ACI marina."
+        },
+        {
+          "id": "aci-umag",
+          "name": "ACI marina Umag",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 45.4336,
+          "lon": 13.5158
+        },
+        {
+          "id": "luka-novigrad-istra",
+          "name": "Novigrad (Istra)",
+          "type": "port",
+          "island": "kopno",
+          "lat": 45.3164,
+          "lon": 13.5636,
+          "notes": "Manja gradska luka, dobra zaštita od bure."
+        },
+        {
+          "id": "marina-nautica-novigrad",
+          "name": "Marina Nautica Novigrad",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 45.3158,
+          "lon": 13.5611
+        },
+        {
+          "id": "luka-rabac",
+          "name": "Rabac",
+          "type": "port",
+          "island": "kopno",
+          "lat": 45.0803,
+          "lon": 14.1572,
+          "notes": "Luka na istočnoj obali Istre. Zaštićena od sjevernih vjetrova."
+        },
+        {
+          "id": "medulin",
+          "name": "Medulin",
+          "type": "anchorage",
+          "island": "kopno",
+          "lat": 44.8161,
+          "lon": 13.9431,
+          "bottom": "pijesak i mulj",
+          "holding": "dobro",
+          "depth": "2-6 m",
+          "protectedFrom": ["N", "NE", "E"],
+          "exposedTo": ["S", "SW", "W"],
+          "buoys": true,
+          "notes": "Veliki plitki zaljev. Zaštićen od bure, izložen jugu."
+        },
+        {
+          "id": "brijuni-fazana",
+          "name": "Brijuni (Fažana)",
+          "type": "anchorage",
+          "island": "Brijuni",
+          "lat": 44.9072,
+          "lon": 13.7550,
+          "bottom": "pijesak",
+          "holding": "dobro",
+          "depth": "3-10 m",
+          "protectedFrom": ["NE", "E", "SE"],
+          "exposedTo": ["W", "NW", "SW"],
+          "buoys": false,
+          "notes": "Sidrenje ispred NP Brijuni. Ulaz u park reguliran."
+        },
+        {
+          "id": "veruda",
+          "name": "Veruda",
+          "type": "anchorage",
+          "island": "kopno",
+          "lat": 44.8419,
+          "lon": 13.8561,
+          "bottom": "mulj",
+          "holding": "dobro",
+          "depth": "3-12 m",
+          "protectedFrom": ["N", "NE", "E", "SE", "S"],
+          "exposedTo": ["W", "SW"],
+          "buoys": true,
+          "notes": "Duboka uvala južno od Pule. Odlična zaštita od većine vjetrova. Marina i plutače."
+        }
+      ],
+      "fuelStations": [
+        {
+          "id": "ina-pula",
+          "name": "B.P. INA Pula",
+          "operator": "INA",
+          "lat": 44.863,
+          "lon": 13.847,
+          "phone": "+385 52 210 801",
+          "depth": "5.0 m",
+          "hours": "06-22 (sezona)"
+        },
+        {
+          "id": "ina-rovinj",
+          "name": "B.P. INA Rovinj",
+          "operator": "INA",
+          "lat": 45.080,
+          "lon": 13.632,
+          "phone": "+385 52 811 266",
+          "depth": "4.0 m",
+          "hours": "06-22 (sezona)"
+        },
+        {
+          "id": "ina-porec",
+          "name": "B.P. INA Poreč",
+          "operator": "INA",
+          "lat": 45.224,
+          "lon": 13.593,
+          "phone": "+385 52 451 555",
+          "depth": "4.0 m",
+          "hours": "07-21 (sezona)"
+        }
+      ]
+    },
+    {
       "id": "kvarner",
       "name": "Kvarner",
       "center": {
         "lat": 44.72,
         "lon": 14.55
       },
-      "dhmz": "rije|kvarner|primorj|velebit|senj|istr|krk|cres|lošinj|losinj|\\brab\\b",
+      "dhmz": "rije|kvarner|primorj|velebit|senj|istr|krk|cres|lošinj|losinj|\\brab\\b|pag|novalja|opatij",
       "capitanies": [
         {
           "name": "Lučka kapetanija Rijeka",
@@ -283,6 +472,57 @@
           "vhf": "17",
           "phone": "+385 51 654 111",
           "notes": "Najstarija marina u Hrvatskoj (1964.), ~800 vezova za jahte do 45 m + 400 kopnenih. Cjelogodišnja, travel lift, servis, gorivo."
+        },
+        {
+          "id": "novalja-pag",
+          "name": "Novalja (Pag)",
+          "type": "port",
+          "island": "Pag",
+          "lat": 44.5572,
+          "lon": 14.8856,
+          "notes": "Gradska luka na sjevernom Pagu. Zaštita od bure ograničena."
+        },
+        {
+          "id": "pag-grad",
+          "name": "Pag (grad)",
+          "type": "port",
+          "island": "Pag",
+          "lat": 44.4436,
+          "lon": 15.0508,
+          "notes": "Luka u Paškom zaljevu. Dobra zaštita od svih vjetrova."
+        },
+        {
+          "id": "baska-krk",
+          "name": "Baška (Krk)",
+          "type": "anchorage",
+          "island": "Krk",
+          "lat": 44.9681,
+          "lon": 14.7536,
+          "bottom": "pijesak i kamen",
+          "holding": "srednje",
+          "depth": "3-8 m",
+          "protectedFrom": ["N", "NE", "NW"],
+          "exposedTo": ["S", "SE", "SW"],
+          "buoys": false,
+          "notes": "Poznata po plaži. Izložena jugu i lebić. Po buri jako zaštićena."
+        },
+        {
+          "id": "luka-opatija",
+          "name": "Opatija",
+          "type": "port",
+          "island": "kopno",
+          "lat": 45.3372,
+          "lon": 14.3047,
+          "notes": "Gradska luka na Opatijskoj rivijeri. Marine u blizini."
+        },
+        {
+          "id": "luka-rijeka",
+          "name": "Rijeka",
+          "type": "port",
+          "island": "kopno",
+          "lat": 45.3275,
+          "lon": 14.4419,
+          "notes": "Najveća hrvatska luka. ACI marina na Krku u blizini."
         }
       ],
       "fuelStations": [
@@ -1387,6 +1627,113 @@
           "vhf": "17",
           "phone": "+385 21 774 018",
           "notes": "125 cjelogodišnjih vezova + 25 kopnenih. Vrboska — 'Mala Venecija Hvara'. Mirna marina u uvali."
+        },
+        {
+          "id": "supetar-brac",
+          "name": "Supetar (Brač)",
+          "type": "port",
+          "island": "Brač",
+          "lat": 43.3847,
+          "lon": 16.5533,
+          "notes": "Glavna trajektna luka Brača. Zaštićena od juga."
+        },
+        {
+          "id": "bol-brac",
+          "name": "Bol (Brač)",
+          "type": "anchorage",
+          "island": "Brač",
+          "lat": 43.2614,
+          "lon": 16.6556,
+          "bottom": "pijesak i kamen",
+          "holding": "srednje",
+          "depth": "4-12 m",
+          "protectedFrom": ["N", "NE", "NW"],
+          "exposedTo": ["S", "SE", "SW"],
+          "buoys": true,
+          "notes": "Poznata po Zlatnom ratu. Izložena jugu. Plutače ispred plaže."
+        },
+        {
+          "id": "hvar-grad",
+          "name": "Hvar (grad)",
+          "type": "port",
+          "island": "Hvar",
+          "lat": 43.1725,
+          "lon": 16.4411,
+          "notes": "Turistički centar otoka Hvara. Gradska luka i ACI marina. Zaštićena od bure."
+        },
+        {
+          "id": "luka-makarska",
+          "name": "Makarska",
+          "type": "port",
+          "island": "kopno",
+          "lat": 43.2969,
+          "lon": 17.0181,
+          "notes": "Gradska luka i marina. Dobra zaštita od bure (Biokovo). Izložena jugu."
+        },
+        {
+          "id": "marina-ramova",
+          "name": "Marina Ramova Baška Voda",
+          "type": "marina",
+          "island": "kopno",
+          "lat": 43.3558,
+          "lon": 16.9492
+        },
+        {
+          "id": "luka-omis",
+          "name": "Omiš",
+          "type": "port",
+          "island": "kopno",
+          "lat": 43.4447,
+          "lon": 16.6928,
+          "notes": "Lučica u ušću Cetine. Zaštićena marina."
+        },
+        {
+          "id": "tucepi",
+          "name": "Tučepi",
+          "type": "anchorage",
+          "island": "kopno",
+          "lat": 43.2678,
+          "lon": 17.0558,
+          "bottom": "pijesak",
+          "holding": "srednje",
+          "depth": "3-8 m",
+          "protectedFrom": ["N", "NE", "NW"],
+          "exposedTo": ["S", "SE", "SW"],
+          "buoys": false,
+          "notes": "Sidrište uz Makarsko primorje. Zaštićeno od bure Biokovom."
+        },
+        {
+          "id": "jelsa-hvar",
+          "name": "Jelsa (Hvar)",
+          "type": "port",
+          "island": "Hvar",
+          "lat": 43.1611,
+          "lon": 16.6917,
+          "notes": "Zaštićena luka na sjevernoj obali Hvara. Dobro zaklonjeno sidrište."
+        },
+        {
+          "id": "sucuraj-hvar",
+          "name": "Sućuraj (Hvar)",
+          "type": "port",
+          "island": "Hvar",
+          "lat": 43.1264,
+          "lon": 17.1906,
+          "notes": "Trajektna luka na istočnom rtu Hvara."
+        },
+        {
+          "id": "vinogradisce-sv-klement",
+          "name": "Uvala Vinogradišće (Sv. Klement)",
+          "type": "anchorage",
+          "island": "Pakleni",
+          "lat": 43.1578,
+          "lon": 16.3850,
+          "bottom": "pijesak",
+          "holding": "dobro",
+          "depth": "3-8 m",
+          "protectedFrom": ["N", "NE", "E"],
+          "exposedTo": ["S", "SW", "W"],
+          "buoys": true,
+          "notes": "Popularna uvala na Paklenim otocima. Plutače i restorani."
         }
       ],
       "fuelStations": [
@@ -1811,6 +2158,81 @@
           "buoys": false,
           "phone": "+385 91 141 4700",
           "notes": "132 morskih vezova za jahte do 40 m (mogu primiti do 100 m). Moderna marina na kraju 9,5 km prirodnog zaljeva."
+        },
+        {
+          "id": "korcula-grad",
+          "name": "Korčula (grad)",
+          "type": "port",
+          "island": "Korčula",
+          "lat": 42.9597,
+          "lon": 17.1364,
+          "notes": "Gradska luka starog grada. Zaštićena od većine vjetrova Pelješkim kanalom."
+        },
+        {
+          "id": "luka-orebic",
+          "name": "Orebić",
+          "type": "port",
+          "island": "kopno",
+          "lat": 42.9794,
+          "lon": 17.1781,
+          "notes": "Luka na Pelješcu nasuprot Korčuli. Dobra zaštita od juga."
+        },
+        {
+          "id": "lastovo-ubli",
+          "name": "Lastovo (Ubli)",
+          "type": "port",
+          "island": "Lastovo",
+          "lat": 42.7450,
+          "lon": 16.8206,
+          "notes": "Trajektna luka na Lastovu. Zaštićena od bure."
+        },
+        {
+          "id": "skrivena-luka-lastovo",
+          "name": "Uvala Skrivena Luka (Lastovo)",
+          "type": "anchorage",
+          "island": "Lastovo",
+          "lat": 42.7319,
+          "lon": 16.8672,
+          "bottom": "mulj i pijesak",
+          "holding": "dobro",
+          "depth": "5-15 m",
+          "protectedFrom": ["N", "NE", "E", "NW", "W"],
+          "exposedTo": ["S", "SE"],
+          "buoys": false,
+          "notes": "Duboka, zaštićena uvala. Jedno od najsigurnijih prirodnih sidrišta na Jadranu."
+        },
+        {
+          "id": "luka-ston",
+          "name": "Ston",
+          "type": "port",
+          "island": "kopno",
+          "lat": 42.8392,
+          "lon": 17.6964,
+          "notes": "Povijesna luka na Pelješcu. Poznata po solanama."
+        },
+        {
+          "id": "lumbarda-korcula",
+          "name": "Lumbarda (Korčula)",
+          "type": "anchorage",
+          "island": "Korčula",
+          "lat": 42.9239,
+          "lon": 17.1644,
+          "bottom": "pijesak",
+          "holding": "dobro",
+          "depth": "3-8 m",
+          "protectedFrom": ["N", "NW", "W"],
+          "exposedTo": ["S", "SE", "E"],
+          "buoys": false,
+          "notes": "Pješčane uvale na istočnom dijelu Korčule."
+        },
+        {
+          "id": "sobra-mljet",
+          "name": "Sobra (Mljet)",
+          "type": "port",
+          "island": "Mljet",
+          "lat": 42.7389,
+          "lon": 17.5917,
+          "notes": "Trajektna luka na Mljetu."
         }
       ],
       "fuelStations": [

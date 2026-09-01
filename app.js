@@ -382,6 +382,43 @@ function dayWarnMarkup(dateStr) {
   return { chip, block };
 }
 
+function renderForecastSummary(wx) {
+  const el = document.getElementById("forecastSummary");
+  if (!el) return;
+  const days = state.mgDays;
+  if (!days || !days.length) {
+    el.innerHTML = `<div class="card"><div class="detail-empty">Prognoza nedostupna.</div></div>`;
+    return;
+  }
+  el.innerHTML = days.map((d, i) => {
+    const v = dayVerdict(d.hours);
+    const w = dayWarnMarkup(d.date);
+    const temps = d.hours.map(h => h.temp).filter(t => t != null);
+    const minT = temps.length ? Math.round(Math.min(...temps)) : "—";
+    const maxT = temps.length ? Math.round(Math.max(...temps)) : "—";
+    const seas = d.hours.map(h => h.sea).filter(t => t != null);
+    const seaT = seas.length ? Math.round(seas.reduce((a, b) => a + b, 0) / seas.length) : null;
+    const ss = v.maxWave != null ? seaState(v.maxWave) : null;
+    const bf = beaufort(v.maxWind);
+    const peakHour = d.hours.reduce((a, h) => h.wind > a.wind ? h : a, d.hours[0]);
+    const wDir = windName(peakHour.dir, peakHour.wind);
+    return `<div class="card fc-day-card">
+      <div class="fc-day-header">
+        <span class="fc-day-name">${dayName(d.date, i)} <span class="wx-day-date">${dayLabelDate(d.date)}</span></span>
+        <span class="badge ${v.level}">${v.title}</span>
+      </div>
+      <div class="fc-day-details">
+        <div class="fc-detail"><span class="fc-detail-lbl">💨 Vjetar</span><span>${wDir} · do ${Math.round(v.maxWind)} čv (udari ${Math.round(v.maxGust)} čv) · Bf ${bf.n} ${bf.label}</span></div>
+        <div class="fc-detail"><span class="fc-detail-lbl">🌊 Valovi</span><span>do ${v.maxWave != null ? v.maxWave.toFixed(1) : "—"} m${ss ? " · stanje mora " + ss.n + " " + ss.label : ""}</span></div>
+        <div class="fc-detail"><span class="fc-detail-lbl">🌡️ Zrak</span><span>${minT}–${maxT} °C</span></div>
+        ${seaT != null ? `<div class="fc-detail"><span class="fc-detail-lbl">🌊 More</span><span>~${seaT} °C</span></div>` : ""}
+        ${v.totPrecip > 0.1 ? `<div class="fc-detail"><span class="fc-detail-lbl">🌧️ Kiša</span><span>${v.totPrecip.toFixed(1)} mm</span></div>` : ""}
+      </div>
+      ${w.block}
+    </div>`;
+  }).join("");
+}
+
 function renderMeteograms(wx) {
   const el = document.getElementById("meteograms");
   const days = groupDays(wx);
@@ -393,24 +430,14 @@ function renderMeteograms(wx) {
   const all = days.flatMap(d => d.hours);
   state.mgHours = all;
 
-  // Zaglavlje: 3 dnevne oznake (po meteogramu) + DHMZ chip/detalji
-  const head = `<div class="wx-days-head">` + days.map((d, i) => {
-    const v = dayVerdict(d.hours);
-    const w = dayWarnMarkup(d.date);
-    return `<div class="wx-day-seg">
-      <div class="wx-seg-row">
-        <span class="wx-day-name">${dayName(d.date, i)} <span class="wx-day-date">${dayLabelDate(d.date)}</span></span>
-        <span class="wx-seg-badges"><span class="badge ${v.level}" title="Oznaka po meteogramu">${v.title}</span>${w.chip}</span>
-      </div>${w.block}</div>`;
-  }).join("") + `</div>`;
+  renderForecastSummary(wx);
 
-  // Jedan dan ≈ širina okvira; ukupni graf = broj dana × širina dana → skrola horizontalno.
   const frameW = el.clientWidth || 360;
   const dayW = Math.max(260, frameW - MG.AX_W - 26);
   const plotW = Math.round(days.length * dayW);
   const { axis, plot } = buildMeteogram(all, plotW);
 
-  el.innerHTML = `${head}
+  el.innerHTML = `
   <div class="mg-readout" id="mgReadout"></div>
   <div class="card wx-cont">
     <div class="mg-frame">
@@ -420,7 +447,6 @@ function renderMeteograms(wx) {
     <div class="mg-hint">← povuci za sutra i prekosutra · prijeđi mišem za detalje →</div>
     <div class="mg-model">📡 Model: <b>${modelLabel()}</b> · valovi: pomorski model · izvor: Open-Meteo</div>
   </div>`;
-  // zadani sat okvira = najbliži sadašnjem trenutku
   const now = new Date();
   let di = all.findIndex(h => h.t >= now);
   state.mgDefaultIdx = di < 0 ? 0 : di;
@@ -657,6 +683,12 @@ function wireTabs() {
     if (name === "ruza" && (state.mgHours || []).length) {
       setTimeout(() => drawWindRose((state.mgHours || [])[state.wrIdx || 0]), 50);
     }
+    if (name === "meteogram" && state.wx) {
+      setTimeout(() => {
+        const el = document.getElementById("meteograms");
+        if (el && !el.children.length) renderMeteograms(state.wx);
+      }, 50);
+    }
   }
 
   tabs.forEach(t => t.addEventListener("click", () => activateTab(t.dataset.tab, true)));
@@ -859,7 +891,8 @@ async function boot() {
     const data = await (await fetch("data/spots.json")).json();
     state.regions = data.regions || [];
   } catch (e) {
-    document.getElementById("meteograms").innerHTML = `<div class="card"><div class="detail-empty">Ne mogu učitati podatke.</div></div>`;
+    const errEl = document.getElementById("forecastSummary") || document.getElementById("meteograms");
+    if (errEl) errEl.innerHTML = `<div class="card"><div class="detail-empty">Ne mogu učitati podatke.</div></div>`;
     return;
   }
   if (!state.regions.length) return;
