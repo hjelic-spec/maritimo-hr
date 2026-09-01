@@ -31,7 +31,8 @@
 
   <!-- Tabs -->
   <nav class="tabbar">
-    <button class="tab active" data-tab="vrijeme">🌤️ Vrijeme</button>
+    <button class="tab active" data-tab="vrijeme">🌤️ Prognoza</button>
+    <button class="tab" data-tab="meteogram">📈 Meteogram</button>
     <button class="tab" data-tab="ruza">🧭 Ruža</button>
     <button class="tab" data-tab="dhmz">🇭🇷 DHMZ</button>
     <button class="tab" data-tab="vodic">📒 Vodič</button>
@@ -39,7 +40,7 @@
   </nav>
 
   <main class="main">
-    <!-- TAB: VRIJEME -->
+    <!-- TAB: PROGNOZA (dnevne oznake + upozorenja) -->
     <section class="tabpane active" id="tab-vrijeme">
       <div class="ptr-indicator" id="ptrIndicator">↓ Povuci za osvježavanje</div>
       <div class="wx-scroll">
@@ -50,6 +51,21 @@
 
         <div class="card warnings" id="warnMarine"></div>
 
+        <div id="forecastSummary"></div>
+
+        <div class="card warnings" id="warnings"></div>
+
+        <p class="disclaimer">
+          ⚠️ <strong>Demo.</strong> Prognoza: Open-Meteo. Oznake isplovljavanja i
+          upozorenja su <strong>automatski izračun</strong>, nisu službeni. Prije isplovljenja
+          provjerite <a id="dhmzLink" href="https://meteo.hr/naslovnica-upozorenja.php" target="_blank" rel="noopener">službena upozorenja DHMZ-a</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- TAB: METEOGRAM -->
+    <section class="tabpane" id="tab-meteogram">
+      <div class="wx-scroll">
         <div id="meteograms"></div>
 
         <div class="mg-legend">
@@ -63,12 +79,9 @@
           <span><i class="sw pres"></i> tlak</span>
         </div>
 
-        <div class="card warnings" id="warnings"></div>
-
         <p class="disclaimer">
-          ⚠️ <strong>Demo.</strong> Prognoza i meteogrami: Open-Meteo. Oznake isplovljavanja i
-          upozorenja su <strong>automatski izračun</strong>, nisu službeni. Prije isplovljenja
-          provjerite <a id="dhmzLink" href="https://meteo.hr/naslovnica_upozorenja.php" target="_blank" rel="noopener">službena upozorenja DHMZ-a</a>.
+          Meteogrami: Open-Meteo (3 dana). Povucite lijevo/desno za sutra i prekosutra.
+          Prijeđite mišem ili dodirnite graf za detalje po satu.
         </p>
       </div>
     </section>
@@ -168,6 +181,18 @@
         </div>
 
         <div class="card info-card">
+          <h3>🌤️ Tab Prognoza</h3>
+          <p>Dnevni pregled za <strong>3 dana</strong> s ključnim podacima za svaki dan:</p>
+          <ul>
+            <li><strong>Vjetar</strong> — maksimalni stalni vjetar i udari (čvorovi), Beaufortov stupanj.</li>
+            <li><strong>Valovi</strong> — maksimalna visina i stanje mora po Douglasovoj ljestvici.</li>
+            <li><strong>Temperature</strong> — raspon zraka i prosječna temperatura mora.</li>
+            <li><strong>Kiša</strong> — ukupna oborina (ako je ima).</li>
+            <li><strong>Upozorenja</strong> — automatska (iz prognoze) i službena (DHMZ).</li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
           <h3>🚦 Kako se čita oznaka isplovljavanja</h3>
           <p>Oznaka je okvirna procjena za <strong>manje brodice</strong>, izračunata iz prognoze
           (vjetar, udari, valovi).</p>
@@ -236,19 +261,21 @@
         </div>
 
         <div class="card info-card">
-          <h3>📈 Meteogram — što prikazuje</h3>
+          <h3>📈 Tab Meteogram</h3>
+          <p>Interaktivni graf prognoze za 3 dana s detaljnim satnim podacima.</p>
           <ul>
             <li>Šest panela odozgo: <strong>vjetar + udari</strong>, <strong>valovi</strong>, kiša,
             oblaci, temperatura (zrak + more), tlak. Vjetar i valovi su istaknuti kao najvažniji.</li>
             <li><strong>Strelice</strong> iznad panela vjetra pokazuju <strong>smjer kamo vjetar puše</strong>, za svaki sat.</li>
             <li>Jedan dan stane na širinu ekrana; <strong>povuci lijevo/desno</strong> za sutra i prekosutra.</li>
             <li>Prijeđi mišem (ili dodirni) po grafu — detalji za taj sat prikažu se u <strong>okviru iznad</strong>.</li>
+            <li><strong>Legenda</strong> ispod grafa objašnjava boje linija i područja.</li>
           </ul>
         </div>
 
         <div class="card info-card">
           <h3>💨 Stanje vjetra (Beaufortova ljestvica)</h3>
-          <p>Stupanj jačine vjetra prikazuje se uz brzinu vjetra u detaljima meteograma.
+          <p>Stupanj jačine vjetra prikazuje se u tabovima Prognoza i Meteogram.
           Temelji se na <strong>Beaufortovoj ljestvici</strong> (0–12), međunarodnom standardu za opis jačine vjetra.
           Brzine su u čvorovima (kn).</p>
           <table class="sea-state-tbl">
@@ -275,7 +302,7 @@
 
         <div class="card info-card">
           <h3>🌊 Stanje mora (Douglasova ljestvica)</h3>
-          <p>Stupanj stanja mora prikazuje se uz visinu valova u detaljima meteograma.
+          <p>Stupanj stanja mora prikazuje se u tabovima Prognoza i Meteogram.
           Temelji se na <strong>Douglasovoj ljestvici</strong> (0–9), međunarodnom standardu za opis valovitosti.</p>
           <table class="sea-state-tbl">
             <thead><tr><th>Stupanj</th><th>Opis</th><th>Visina valova</th></tr></thead>
@@ -313,9 +340,9 @@
         <div class="card info-card">
           <h3>⚠️ Upozorenja: službena vs. automatska</h3>
           <ul>
-            <li><strong>Službena upozorenja DHMZ</strong> (dno stranice) — stvarna, iz DHMZ CAP feeda
+            <li><strong>Službena upozorenja DHMZ</strong> (tab Prognoza, dno) — stvarna, iz DHMZ CAP feeda
             (Otvorena licenca RH), filtrirana na odabrano područje (kopnene regije + pomorske zone).</li>
-            <li><strong>More i vjetar (automatski)</strong> (vrh) — naš pomoćni izračun iz prognoze,
+            <li><strong>More i vjetar (automatski)</strong> (tab Prognoza, vrh) — naš pomoćni izračun iz prognoze,
             <strong>nije službeni</strong>.</li>
             <li>Kod odluke uvijek imaju <strong>prednost službena DHMZ upozorenja</strong>.</li>
           </ul>
@@ -324,10 +351,13 @@
         <div class="card info-card">
           <h3>📍 Odabir lokacije i GPS</h3>
           <ul>
-            <li>Gore biraš <strong>područje</strong> (Kvarner, Zadar, Šibenik, Split, Dubrovnik),
-            pa centar ili konkretno sidrište.</li>
-            <li><strong>📍 Moja lokacija</strong> — GPS odabere najbliže područje i najbliže sidrište,
-            te prognozu za tvoju točku.</li>
+            <li>Gore biraš <strong>područje</strong> (Istra, Kvarner, Zadar, Šibenik, Split, Dubrovnik),
+            pa centar ili konkretno sidrište/luku/marinu.</li>
+            <li><strong>📍 Moja lokacija</strong> — GPS automatski odabere <strong>najbliže područje</strong>
+            i <strong>najbliže sidrište</strong> unutar tog područja. Prognoza se učitava za koordinate
+            tog sidrišta (ne za tvoju točnu GPS poziciju), jer su prognostičke točke vezane uz poznate lokacije.</li>
+            <li>Ako ručno odabereš „centar" umjesto konkretnog sidrišta, prognoza je za
+            središnju točku područja.</li>
           </ul>
         </div>
 

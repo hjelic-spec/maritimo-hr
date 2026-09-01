@@ -121,7 +121,7 @@ body {
 .main { flex: 1; display: flex; min-height: 0; }
 .tabpane { display: none; flex: 1; min-height: 0; }
 .tabpane.active { display: flex; }
-#tab-vrijeme.active, #tab-info.active, #tab-dhmz.active, #tab-vodic.active, #tab-ruza.active {
+#tab-vrijeme.active, #tab-meteogram.active, #tab-info.active, #tab-dhmz.active, #tab-vodic.active, #tab-ruza.active {
   display: block; overflow-y: auto;
 }
 
@@ -200,6 +200,21 @@ body {
 .ptr-indicator.refreshing { height: 44px; opacity: 1; }
 
 .wx-scroll { max-width: 640px; margin: 0 auto; padding: 14px; display: flex; flex-direction: column; gap: 14px; }
+
+/* ═══════ Forecast summary cards ═══════ */
+.fc-day-card { padding: 14px; }
+.fc-day-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.fc-day-name { font-weight: 700; font-size: 15px; }
+.fc-day-details { display: flex; flex-direction: column; gap: 6px; }
+.fc-detail {
+  display: flex; gap: 8px; font-size: 13px; line-height: 1.4;
+}
+.fc-detail-lbl {
+  min-width: 72px; font-weight: 600; white-space: nowrap;
+}
 
 /* ═══════ Weather day / meteogram ═══════ */
 .wx-day { padding: 12px 12px 6px; }

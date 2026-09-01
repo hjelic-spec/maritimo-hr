@@ -1,5 +1,5 @@
 // Maritimo — pomorska vremenska prognoza za voditelje brodica (Jadran)
-// Tab "Vrijeme": Open-Meteo meteogrami (3 dana) + dnevne oznake + izvedena upozorenja.
+// Prognoza + Meteogram + Ruža vjetrova + DHMZ upozorenja + Vodič (Open-Meteo, 3 dana).
 
 const COMPASS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 const ARROWS = { N: "↓", NE: "↙", E: "←", SE: "↖", S: "↑", SW: "↗", W: "→", NW: "↘" };
@@ -85,8 +85,8 @@ async function fetchWeather(lat, lon) {
     fetch(fUrl).then(r => r.json()), fetch(mUrl).then(r => r.json())
   ]);
   return {
-    fc: f.status === "fulfilled" ? f.value : null,
-    mar: m.status === "fulfilled" ? m.value : null
+    fc: f.status === "fulfilled" && !f.value.error ? f.value : null,
+    mar: m.status === "fulfilled" && !m.value.error ? m.value : null
   };
 }
 
@@ -133,8 +133,8 @@ function dayVerdict(hours) {
   const maxWind = Math.max(...hours.map(x => x.wind));
   const maxGust = Math.max(...hours.map(x => x.gust));
   const waves = hours.map(x => x.wave).filter(v => v != null);
-  const maxWave = waves.length ? Math.max(...waves) : 0;
-  return { ...assess(maxWind, maxGust, maxWave), maxWind, maxGust, maxWave,
+  const maxWave = waves.length ? Math.max(...waves) : null;
+  return { ...assess(maxWind, maxGust, maxWave || 0), maxWind, maxGust, maxWave,
     totPrecip: hours.reduce((s, x) => s + (x.precip || 0), 0) };
 }
 
@@ -298,7 +298,7 @@ function renderReadout(h) {
     row("background:#2a78d6", "Vjetar", (() => { const bf = beaufort(h.wind); return `${Math.round(h.wind)} / udari ${Math.round(h.gust)} čv · Bf ${bf.n} (${bf.label})`; })()) +
     row("background:#1baf7a", "Valovi", h.wave == null ? "—" : (() => { const ss = seaState(h.wave); return `${h.wave.toFixed(2)} m · stanje mora ${ss.n} (${ss.label})`; })()) +
     row("background:#5598e7", "Kiša", `${(h.precip || 0).toFixed(1)} mm`) +
-    row("background:#a7b0b8", "Oblaci", `${Math.round(h.cloud)} %`) +
+    row("background:#a7b0b8", "Oblaci", h.cloud != null ? `${Math.round(h.cloud)} %` : "—") +
     row("background:linear-gradient(90deg,#eb6834 50%,#1baf7a 50%)", "Temperatura",
       `zrak ${h.temp == null ? "—" : Math.round(h.temp) + "°"} · more ${h.sea == null ? "—" : Math.round(h.sea) + "°"}`) +
     row("background:#4a3aa7", "Tlak", h.pres == null ? "—" : `${Math.round(h.pres)} hPa`) +
@@ -352,7 +352,7 @@ function wireMeteogramHover() {
   svg.addEventListener("touchmove", e => { if (e.touches[0]) move(e.touches[0].clientX); }, { passive: true });
 }
 
-// DHMZ upozorenja za vjetar koja se preklapaju s danim danom (i s regijom Kvarner)
+// DHMZ upozorenja za vjetar koja se preklapaju s danim danom i odabranim područjem
 function severityRank(color) { return color === "red" ? 3 : color === "orange" ? 2 : color === "yellow" ? 1 : 0; }
 function dhmzWindForDay(dateStr) {
   const all = state.dhmz;
@@ -368,10 +368,9 @@ function dhmzWindForDay(dateStr) {
 
 function dayWarnMarkup(dateStr) {
   const ww = dhmzWindForDay(dateStr);
-  if (!ww.length) return { chip: "", block: "" };
+  if (!ww.length) return { block: "" };
   const worst = ww.reduce((a, w) => severityRank(w.color) > severityRank(a.color) ? w : a, ww[0]);
   const cls = COLOR_TO_LEVEL[worst.color] || "a";
-  const chip = `<span class="warn-chip ${cls}" title="Aktivno DHMZ upozorenje za vjetar">⚠️ DHMZ vjetar</span>`;
   const rows = ww.map(w => {
     const area = (w.areas || []).filter(a => state.regionRe.test(a))[0] || (w.areas || [])[0] || "";
     return `<div class="wx-warn-row"><b>${w.event}</b> · ${area} · ${fmtRange(w.onset, w.expires)}
@@ -379,10 +378,10 @@ function dayWarnMarkup(dateStr) {
   }).join("");
   const block = `<div class="wx-day-warn ${cls}">${rows}
     <a class="wx-warn-link" href="https://meteo.hr/naslovnica-upozorenja.php" target="_blank" rel="noopener">detalji na DHMZ →</a></div>`;
-  return { chip, block };
+  return { block };
 }
 
-function renderForecastSummary(wx) {
+function renderForecastSummary() {
   const el = document.getElementById("forecastSummary");
   if (!el) return;
   const days = state.mgDays;
@@ -419,22 +418,28 @@ function renderForecastSummary(wx) {
   }).join("");
 }
 
-function renderMeteograms(wx) {
-  const el = document.getElementById("meteograms");
+function processWeatherData(wx) {
   const days = groupDays(wx);
   state.mgDays = days;
-  if (!days.length) {
-    el.innerHTML = `<div class="card"><div class="detail-empty">Prognoza nedostupna.</div></div>`;
-    state.mgHours = []; return;
-  }
+  if (!days.length) { state.mgHours = []; return; }
   const all = days.flatMap(d => d.hours);
   state.mgHours = all;
+  const now = new Date();
+  let di = all.findIndex(h => h.t >= now);
+  state.mgDefaultIdx = di < 0 ? 0 : di;
+}
 
-  renderForecastSummary(wx);
-
+function renderMeteogramSvg() {
+  const el = document.getElementById("meteograms");
+  if (!el) return;
+  const all = state.mgHours;
+  if (!all || !all.length) {
+    el.innerHTML = `<div class="card"><div class="detail-empty">Prognoza nedostupna.</div></div>`;
+    return;
+  }
   const frameW = el.clientWidth || 360;
   const dayW = Math.max(260, frameW - MG.AX_W - 26);
-  const plotW = Math.round(days.length * dayW);
+  const plotW = Math.round(state.mgDays.length * dayW);
   const { axis, plot } = buildMeteogram(all, plotW);
 
   el.innerHTML = `
@@ -447,16 +452,13 @@ function renderMeteograms(wx) {
     <div class="mg-hint">← povuci za sutra i prekosutra · prijeđi mišem za detalje →</div>
     <div class="mg-model">📡 Model: <b>${modelLabel()}</b> · valovi: pomorski model · izvor: Open-Meteo</div>
   </div>`;
-  const now = new Date();
-  let di = all.findIndex(h => h.t >= now);
-  state.mgDefaultIdx = di < 0 ? 0 : di;
   renderReadout(all[state.mgDefaultIdx]);
   wireMeteogramHover();
 }
 
 // ---- Izvedena upozorenja (iz prognoze) ----
-function deriveWarnings(wx) {
-  const all = state.mgHours.length ? state.mgHours : groupDays(wx).flatMap(d => d.hours);
+function deriveWarnings() {
+  const all = state.mgHours;
   const warns = [];
 
   const peakWind = all.reduce((a, x) => x.wind > a.wind ? x : a, all[0] || { wind: 0 });
@@ -489,7 +491,7 @@ function whenLabel(d) {
   if (!d) return "";
   const days = ["danas", "sutra"];
   const now = new Date(); const dd = Math.floor((d - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
-  const day = dd <= 1 ? days[dd] || "" : DANI[d.getDay()].toLowerCase();
+  const day = dd >= 0 && dd <= 1 ? days[dd] : DANI[d.getDay()].toLowerCase();
   return `${day} oko ${String(d.getHours()).padStart(2, "0")}h`;
 }
 
@@ -560,10 +562,12 @@ async function fetchDhmz() {
   try {
     if (IS_NATIVE) {
       const r = await fetch(DHMZ_CAP_URL);
+      if (!r.ok) return null;
       const xml = await r.text();
       return parseDhmzCap(xml);
     }
     const r = await fetch("/api/warnings");
+    if (!r.ok) return null;
     const j = await r.json();
     return j.warnings || [];
   } catch (e) { return null; }
@@ -587,9 +591,9 @@ function dhmzRows(all) {
   }).join("");
 }
 
-function renderWarnings(wx, dhmz) {
+function renderWarnings(dhmz) {
   const el = document.getElementById("warnings");
-  const marine = deriveWarnings(wx);
+  const marine = deriveWarnings();
   const marineRows = marine.length
     ? marine.map(w => `<div class="warn-row ${w.level}"><span class="warn-dot"></span>
         <div><b>${w.title}</b> <span class="warn-when">${whenLabel(w.when)}</span><br>
@@ -618,9 +622,13 @@ async function loadWeather(lat, lon, name) {
   state.wx = { name, lat, lon, fc: null, mar: null, loading: true };
   const w = await fetchWeather(lat, lon);
   state.wx = { ...w, name, lat, lon };
-  renderWarnings(state.wx, state.dhmz);   // state.dhmz: undefined dok se ne učita
-  renderMeteograms(state.wx);
+  processWeatherData(state.wx);
+  renderForecastSummary();
+  renderWarnings(state.dhmz);
   refreshWindRose();
+  const mgEl = document.getElementById("meteograms");
+  if (mgEl) mgEl.innerHTML = "";
+  if (document.getElementById("tab-meteogram").classList.contains("active")) renderMeteogramSvg();
   return state.wx;
 }
 
@@ -680,13 +688,13 @@ function wireTabs() {
     if (pushHistory && location.hash.slice(1) !== name) {
       history.pushState({ tab: name }, "", "#" + name);
     }
-    if (name === "ruza" && (state.mgHours || []).length) {
-      setTimeout(() => drawWindRose((state.mgHours || [])[state.wrIdx || 0]), 50);
+    if (name === "ruza" && state.mgHours.length) {
+      setTimeout(() => drawWindRose(state.mgHours[state.wrIdx || 0]), 50);
     }
-    if (name === "meteogram" && state.wx) {
+    if (name === "meteogram" && state.mgHours.length) {
       setTimeout(() => {
         const el = document.getElementById("meteograms");
-        if (el && !el.children.length) renderMeteograms(state.wx);
+        if (el && !el.children.length) renderMeteogramSvg();
       }, 50);
     }
   }
@@ -875,7 +883,7 @@ function wirePullToRefresh() {
       indicator.classList.add("refreshing");
       await loadWeather(state.wx.lat, state.wx.lon, state.wx.name);
       state.dhmz = await fetchDhmz();
-      if (state.wx) renderWarnings(state.wx, state.dhmz);
+      if (state.wx) renderWarnings(state.dhmz);
       indicator.textContent = "✓ Ažurirano";
       setTimeout(() => { indicator.classList.remove("refreshing"); }, 800);
     } else {
@@ -905,7 +913,7 @@ async function boot() {
   await setRegion(state.regions[0].id);
   locateUser({ silent: true });
   state.dhmz = await fetchDhmz();
-  if (state.wx) renderWarnings(state.wx, state.dhmz);
+  if (state.wx) renderWarnings(state.dhmz);
 }
 
 // ================= RUŽA VJETROVA (Wind Rose) =================
@@ -1211,7 +1219,7 @@ function updateWindRoseInfo(hour) {
   document.getElementById("wrRainInfo").innerHTML =
     `<span class="wr-dot" style="background:#5598e7"></span>` +
     `<span class="wr-ik">Oborina</span>` +
-    `<span class="wr-iv">${(hour.precip || 0).toFixed(1)} mm · oblaci ${Math.round(hour.cloud)}%</span>`;
+    `<span class="wr-iv">${(hour.precip || 0).toFixed(1)} mm · oblaci ${hour.cloud != null ? Math.round(hour.cloud) + "%" : "—"}</span>`;
 }
 
 function updateWindRoseTime(idx) {
@@ -1275,7 +1283,7 @@ function wireWindRose() {
   });
   window.addEventListener("resize", () => {
     if (document.getElementById("tab-ruza").classList.contains("active"))
-      drawWindRose((state.mgHours || [])[state.wrIdx || 0]);
+      drawWindRose(state.mgHours[state.wrIdx || 0]);
   });
 }
 
