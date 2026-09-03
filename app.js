@@ -669,7 +669,7 @@ function wireRadar() {
   if (!btn) return;
   btn.addEventListener("click", () => {
     const img = document.getElementById("dhmz-radar-img");
-    if (img) img.src = "https://vrijeme.hr/kompozit-stat.png?" + Date.now();
+    if (img) img.src = "https://meteo.hr/kompozit-stat.png?" + Date.now();
   });
 }
 
