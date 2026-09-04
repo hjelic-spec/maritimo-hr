@@ -401,17 +401,50 @@ function renderForecastSummary() {
     const bf = beaufort(v.maxWind);
     const peakHour = d.hours.reduce((a, h) => h.wind > a.wind ? h : a, d.hours[0]);
     const wDir = windName(peakHour.dir, peakHour.wind);
+    const windPct = Math.min(100, Math.round((v.maxWind / 40) * 100));
+    const windColor = v.level === "r" ? "red" : v.level === "a" ? "amber" : "green";
     return `<div class="card fc-day-card">
       <div class="fc-day-header">
         <span class="fc-day-name">${dayName(d.date, i)} <span class="wx-day-date">${dayLabelDate(d.date)}</span></span>
         <span class="badge ${v.level}">${v.title}</span>
       </div>
       <div class="fc-day-details">
-        <div class="fc-detail"><span class="fc-detail-lbl">💨 Vjetar</span><span>${wDir} · do ${Math.round(v.maxWind)} čv (udari ${Math.round(v.maxGust)} čv) · Bf ${bf.n} ${bf.label}</span></div>
-        <div class="fc-detail"><span class="fc-detail-lbl">🌊 Valovi</span><span>do ${v.maxWave != null ? v.maxWave.toFixed(1) : "—"} m${ss ? " · stanje mora " + ss.n + " " + ss.label : ""}</span></div>
-        <div class="fc-detail"><span class="fc-detail-lbl">🌡️ Zrak</span><span>${minT}–${maxT} °C</span></div>
-        ${seaT != null ? `<div class="fc-detail"><span class="fc-detail-lbl">🌊 More</span><span>~${seaT} °C</span></div>` : ""}
-        ${v.totPrecip > 0.1 ? `<div class="fc-detail"><span class="fc-detail-lbl">🌧️ Kiša</span><span>${v.totPrecip.toFixed(1)} mm</span></div>` : ""}
+        <div class="fc-detail">
+          <div class="fc-detail-icon wind">💨</div>
+          <div class="fc-detail-body">
+            <span class="fc-detail-lbl">Vjetar</span>
+            <span class="fc-detail-val">${wDir} · do ${Math.round(v.maxWind)} čv (udari ${Math.round(v.maxGust)} čv) · Bf ${bf.n} ${bf.label}</span>
+            <div class="fc-wind-bar"><div class="fc-wind-bar-fill ${windColor}" style="width:${windPct}%"></div></div>
+          </div>
+        </div>
+        <div class="fc-detail">
+          <div class="fc-detail-icon wave">🌊</div>
+          <div class="fc-detail-body">
+            <span class="fc-detail-lbl">Valovi</span>
+            <span class="fc-detail-val">do ${v.maxWave != null ? v.maxWave.toFixed(1) : "—"} m${ss ? " · stanje mora " + ss.n + " " + ss.label : ""}</span>
+          </div>
+        </div>
+        <div class="fc-detail">
+          <div class="fc-detail-icon temp">🌡️</div>
+          <div class="fc-detail-body">
+            <span class="fc-detail-lbl">Zrak</span>
+            <span class="fc-detail-val">${minT}–${maxT} °C</span>
+          </div>
+        </div>
+        ${seaT != null ? `<div class="fc-detail">
+          <div class="fc-detail-icon sea">🌊</div>
+          <div class="fc-detail-body">
+            <span class="fc-detail-lbl">More</span>
+            <span class="fc-detail-val">~${seaT} °C</span>
+          </div>
+        </div>` : ""}
+        ${v.totPrecip > 0.1 ? `<div class="fc-detail">
+          <div class="fc-detail-icon rain">🌧️</div>
+          <div class="fc-detail-body">
+            <span class="fc-detail-lbl">Kiša</span>
+            <span class="fc-detail-val">${v.totPrecip.toFixed(1)} mm</span>
+          </div>
+        </div>` : ""}
       </div>
       ${w.block}
     </div>`;

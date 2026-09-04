@@ -29,16 +29,6 @@
     <button id="gpsBtn" class="gps-btn" title="Prognoza za moju GPS lokaciju">📍 Moja lokacija</button>
   </div>
 
-  <!-- Tabs -->
-  <nav class="tabbar">
-    <button class="tab active" data-tab="vrijeme">🌤️ Prognoza</button>
-    <button class="tab" data-tab="meteogram">📈 Meteogram</button>
-    <button class="tab" data-tab="ruza">🧭 Ruža</button>
-    <button class="tab" data-tab="dhmz">🇭🇷 DHMZ</button>
-    <button class="tab" data-tab="vodic">📒 Vodič</button>
-    <button class="tab" data-tab="info">ℹ️ Info</button>
-  </nav>
-
   <main class="main">
     <!-- TAB: PROGNOZA (dnevne oznake + upozorenja) -->
     <section class="tabpane active" id="tab-vrijeme">
@@ -407,6 +397,34 @@
       </div>
     </section>
   </main>
+
+  <!-- Bottom Tab Bar -->
+  <nav class="tabbar">
+    <button class="tab active" data-tab="vrijeme">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg>
+      <span class="tab-label">Prognoza</span>
+    </button>
+    <button class="tab" data-tab="meteogram">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span class="tab-label">Meteogram</span>
+    </button>
+    <button class="tab" data-tab="ruza">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="12 2 15 10 12 8 9 10" fill="currentColor" stroke="none"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+      <span class="tab-label">Ruža</span>
+    </button>
+    <button class="tab" data-tab="dhmz">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span class="tab-label">DHMZ</span>
+    </button>
+    <button class="tab" data-tab="vodic">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span class="tab-label">Vodič</span>
+    </button>
+    <button class="tab" data-tab="info">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <span class="tab-label">Info</span>
+    </button>
+  </nav>
 
   <!-- SOS modal -->
   <div class="modal-backdrop" id="sosModal" hidden>
