@@ -1328,3 +1328,7 @@ function refreshWindRose() {
 
 boot();
 
+if ("serviceWorker" in navigator && !IS_NATIVE) {
+  navigator.serviceWorker.register("/sw.js").catch(() => {});
+}
+
