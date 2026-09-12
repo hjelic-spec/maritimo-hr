@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://maritimo-hr.vercel.app/sitemap.xml
+Sitemap: https://maritimo.com.hr/sitemap.xml
