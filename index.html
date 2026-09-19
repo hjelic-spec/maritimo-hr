@@ -38,6 +38,10 @@
   <meta name="msapplication-TileColor" content="#2c4f6e" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon-192.svg" type="image/svg+xml" />
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
   <link rel="apple-touch-icon" href="icons/icon-192.svg" />
 
   <!-- Preconnect & Styles -->
@@ -109,11 +113,32 @@
     <button id="sosBtn" class="sos" aria-label="Hitne službe">SOS</button>
   </header>
 
-  <!-- Region + GPS -->
-  <div class="regionbar">
-    <span class="regionbar-lbl">Područje</span>
-    <select id="regionSelect"></select>
-    <button id="gpsBtn" class="gps-btn" title="Prognoza za moju GPS lokaciju">📍 Moja lokacija</button>
+  <!-- Location bar -->
+  <div class="locbar">
+    <select id="locSelect" class="loc-select"></select>
+    <button id="gpsBtn" class="loc-btn" title="GPS lokacija">📍</button>
+    <button id="mapBtn" class="loc-btn" title="Upravljaj lokacijama">🗺️</button>
+  </div>
+
+  <!-- Map picker modal -->
+  <div class="modal-backdrop" id="mapModal" hidden>
+    <div class="map-modal">
+      <div class="map-modal-head">
+        <h2>📍 Moje lokacije</h2>
+        <span class="map-modal-hint">Dodirni kartu za novu lokaciju (maks. 5)</span>
+        <button id="mapClose" aria-label="Zatvori">✕</button>
+      </div>
+      <div id="mapContainer" style="height:50vh;min-height:280px"></div>
+      <div id="mapNameBar" class="map-name-bar" hidden>
+        <input id="mapNameInput" type="text" placeholder="Naziv lokacije…" maxlength="40" class="map-name-input" />
+        <button id="mapNameOk" class="map-name-ok">Dodaj</button>
+        <button id="mapNameCancel" class="map-name-cancel">✕</button>
+      </div>
+      <div id="mapLocList" class="map-loc-list"></div>
+      <div class="map-modal-foot">
+        <button id="mapDone" class="map-done-btn">Gotovo</button>
+      </div>
+    </div>
   </div>
 
   <noscript>
@@ -130,11 +155,6 @@
     <section class="tabpane active" id="tab-vrijeme">
       <div class="ptr-indicator" id="ptrIndicator">↓ Povuci za osvježavanje</div>
       <div class="wx-scroll">
-        <div class="picker">
-          <label for="wxSelect">Lokacija prognoze</label>
-          <select id="wxSelect"></select>
-        </div>
-
         <div class="card warnings" id="warnMarine"></div>
         <div class="card warnings" id="warnings"></div>
 
@@ -151,10 +171,6 @@
     <!-- TAB: METEOGRAM -->
     <section class="tabpane" id="tab-meteogram">
       <div class="wx-scroll">
-        <div class="picker">
-          <label for="wxSelectMg">Lokacija prognoze</label>
-          <select id="wxSelectMg"></select>
-        </div>
         <div id="meteograms"></div>
 
         <div class="mg-legend">
@@ -177,12 +193,6 @@
 
     <!-- TAB: RUŽA VJETROVA -->
     <section class="tabpane" id="tab-ruza">
-      <div class="wx-scroll">
-        <div class="picker">
-          <label for="wxSelectWr">Lokacija prognoze</label>
-          <select id="wxSelectWr"></select>
-        </div>
-      </div>
       <div class="wr-scroll">
         <div class="wr-slider-box">
           <button class="wr-arrow" id="wrPrev" title="Prethodni sat">◀</button>

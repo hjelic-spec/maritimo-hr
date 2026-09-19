@@ -70,7 +70,33 @@ const state = { spots: [], center: { lat: 44.72, lon: 14.55 }, active: null,
   capitanies: [], regions: [], regionId: null, regionRe: /$^/, mgDefaultIdx: 0,
   fuelStations: [], vodicFilter: "all",
   model: (() => { try { const m = localStorage.getItem("mgModel"); return m && m !== "best_match" ? m : "italia_meteo_arpae_icon_2i"; } catch (e) { return "italia_meteo_arpae_icon_2i"; } })(),
-  wrIdx: 0 };
+  wrIdx: 0, userLocs: [] };
+
+// ---- User locations (localStorage) ----
+function loadUserLocs() {
+  try { return JSON.parse(localStorage.getItem("userLocs") || "[]"); } catch (e) { return []; }
+}
+function saveUserLocs(locs) {
+  state.userLocs = locs;
+  try { localStorage.setItem("userLocs", JSON.stringify(locs)); } catch (e) {}
+}
+function regionForCoords(lat, lon) {
+  if (!state.regions.length) return state.regions[0];
+  return state.regions.reduce((best, r) => {
+    const d = (r.center.lat - lat) ** 2 + (r.center.lon - lon) ** 2;
+    return d < best.d ? { r, d } : best;
+  }, { r: state.regions[0], d: Infinity }).r;
+}
+function applyRegionFromCoords(lat, lon) {
+  const r = regionForCoords(lat, lon);
+  if (!r) return;
+  state.regionId = r.id;
+  state.spots = r.spots || [];
+  state.center = r.center;
+  state.capitanies = r.capitanies || [];
+  state.fuelStations = r.fuelStations || [];
+  state.regionRe = new RegExp(r.dhmz, "i");
+}
 
 // ================= WEATHER =================
 async function fetchWeather(lat, lon) {
@@ -659,20 +685,16 @@ async function loadWeather(lat, lon, name) {
   return state.wx;
 }
 
-// Prebaci cijelo područje (Kvarner / Dubrovnik / …)
 async function setRegion(id, opts = {}) {
   const r = state.regions.find(x => x.id === id) || state.regions[0];
   if (!r) return;
   state.regionId = r.id;
-  state.spots = r.spots;
+  state.spots = r.spots || [];
   state.center = r.center;
   state.capitanies = r.capitanies || [];
   state.fuelStations = r.fuelStations || [];
   state.regionRe = new RegExp(r.dhmz, "i");
   state.active = null;
-  const rsel = document.getElementById("regionSelect");
-  if (rsel) rsel.value = r.id;
-  fillSelectors();
   wireSos();
   renderVodic();
   if (opts.skipWeather) return;
@@ -683,14 +705,16 @@ async function setRegion(id, opts = {}) {
 }
 
 // ================= SELECTION =================
-async function selectSpot(id) {
-  const spot = state.spots.find(s => s.id === id) || null;
-  state.active = spot;
-  ["wxSelect", "wxSelectMg", "wxSelectWr"].forEach(sid => {
-    const el = document.getElementById(sid);
-    if (el) el.value = id || "";
-  });
-  if (spot) await loadWeather(spot.lat, spot.lon, spot.name);
+async function selectUserLoc(idx) {
+  const loc = state.userLocs[idx];
+  if (!loc) return;
+  applyRegionFromCoords(loc.lat, loc.lon);
+  wireSos();
+  renderVodic();
+  const sel = document.getElementById("locSelect");
+  if (sel) sel.value = idx;
+  try { localStorage.setItem("lastLocIdx", idx); } catch (e) {}
+  await loadWeather(loc.lat, loc.lon, loc.name);
 }
 
 // ================= Radar =================
@@ -754,56 +778,39 @@ function wireSos() {
     : "";
 }
 
-function fillSelectors() {
-  const regionName = (state.regions.find(r => r.id === state.regionId) || {}).name || "područje";
-  const centerLabel = `— cijelo ${regionName} (centar) —`;
-  const opts = `<option value="">${centerLabel}</option>` +
-    state.spots.map(s => `<option value="${s.id}">${s.name}</option>`).join("");
-  const selectors = ["wxSelect", "wxSelectMg", "wxSelectWr"]
-    .map(id => document.getElementById(id)).filter(Boolean);
-  const onSpotChange = (val) => {
-    selectors.forEach(s => s.value = val);
-    if (!val) { loadWeather(state.center.lat, state.center.lon, regionName + " (centar)"); return; }
-    selectSpot(val);
-  };
-  selectors.forEach(sel => {
-    sel.innerHTML = opts;
-    sel.onchange = () => onSpotChange(sel.value);
-  });
+function fillLocSelect() {
+  const sel = document.getElementById("locSelect");
+  if (!sel) return;
+  if (!state.userLocs.length) {
+    sel.innerHTML = `<option value="">— dodaj lokacije na karti —</option>`;
+    return;
+  }
+  sel.innerHTML = state.userLocs.map((l, i) => `<option value="${i}">${l.name}</option>`).join("");
+  sel.onchange = () => selectUserLoc(+sel.value);
 }
 
-// Odabir područja + GPS
-function wireRegion() {
-  const sel = document.getElementById("regionSelect");
-  sel.innerHTML = state.regions.map(r => `<option value="${r.id}">${r.name}</option>`).join("");
-  sel.onchange = () => setRegion(sel.value);
-
+function wireLocBar() {
   const gps = document.getElementById("gpsBtn");
   gps.onclick = () => locateUser({ silent: false });
+  const mapBtn = document.getElementById("mapBtn");
+  mapBtn.onclick = () => openMapPicker();
 }
 
 function locateUser({ silent = false } = {}) {
   if (!navigator.geolocation) { if (!silent) alert("GPS nije dostupan u ovom pregledniku."); return Promise.resolve(false); }
   const gps = document.getElementById("gpsBtn");
-  gps.disabled = true; gps.textContent = "📍 Tražim…";
+  gps.disabled = true; gps.textContent = "⏳";
   return new Promise(resolve => {
     navigator.geolocation.getCurrentPosition(async pos => {
       const la = pos.coords.latitude, lo = pos.coords.longitude;
-      const nearest = state.regions.reduce((a, r) => {
-        const d = (r.center.lat - la) ** 2 + (r.center.lon - lo) ** 2;
-        return d < a.d ? { r, d } : a;
-      }, { r: state.regions[0], d: Infinity }).r;
-      gps.disabled = false; gps.textContent = "📍 Moja lokacija";
-      await setRegion(nearest.id, { skipWeather: true });
-      const spot = nearest.spots.reduce((a, s) => {
-        const d = (s.lat - la) ** 2 + (s.lon - lo) ** 2;
-        return d < a.d ? { s, d } : a;
-      }, { s: null, d: Infinity }).s;
-      if (spot) await selectSpot(spot.id);
-      else await loadWeather(la, lo, "📍 Moja lokacija");
+      gps.disabled = false; gps.textContent = "📍";
+      applyRegionFromCoords(la, lo);
+      wireSos();
+      renderVodic();
+      await loadWeather(la, lo, "📍 Moja lokacija");
       resolve(true);
     }, err => {
-      gps.disabled = false; gps.textContent = "📍 Moja lokacija";
+      gps.disabled = false; gps.textContent = "📍";
       if (!silent) alert("Ne mogu dohvatiti GPS lokaciju: " + err.message);
       resolve(false);
     }, { enableHighAccuracy: true, timeout: 10000 });
@@ -926,6 +933,101 @@ function wirePullToRefresh() {
   });
 }
 
+// ================= MAP PICKER =================
+let _map = null;
+let _mapMarkers = [];
+let _pendingLatLng = null;
+
+function openMapPicker() {
+  const modal = document.getElementById("mapModal");
+  modal.hidden = false;
+  if (!_map) {
+    _map = L.map("mapContainer", { zoomControl: true }).setView([43.5, 15.5], 7);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap",
+      maxZoom: 18
+    }).addTo(_map);
+    _map.on("click", e => {
+      if (state.userLocs.length >= 5) return;
+      _pendingLatLng = e.latlng;
+      const bar = document.getElementById("mapNameBar");
+      const inp = document.getElementById("mapNameInput");
+      bar.hidden = false;
+      inp.value = "";
+      inp.focus();
+    });
+  }
+  setTimeout(() => _map.invalidateSize(), 100);
+  renderMapMarkers();
+  renderMapLocList();
+  document.getElementById("mapNameBar").hidden = true;
+
+  function confirmName() {
+    const inp = document.getElementById("mapNameInput");
+    const name = (inp.value || "").trim();
+    if (!name || !_pendingLatLng) return;
+    const loc = { name, lat: +_pendingLatLng.lat.toFixed(4), lon: +_pendingLatLng.lng.toFixed(4) };
+    state.userLocs.push(loc);
+    saveUserLocs(state.userLocs);
+    renderMapMarkers();
+    renderMapLocList();
+    fillLocSelect();
+    document.getElementById("mapNameBar").hidden = true;
+    _pendingLatLng = null;
+  }
+  document.getElementById("mapNameOk").onclick = confirmName;
+  document.getElementById("mapNameInput").onkeydown = e => { if (e.key === "Enter") confirmName(); };
+  document.getElementById("mapNameCancel").onclick = () => {
+    document.getElementById("mapNameBar").hidden = true;
+    _pendingLatLng = null;
+  };
+
+  document.getElementById("mapClose").onclick = () => { modal.hidden = true; };
+  document.getElementById("mapDone").onclick = () => {
+    modal.hidden = true;
+    if (state.userLocs.length) {
+      const lastIdx = +(localStorage.getItem("lastLocIdx") || 0);
+      const idx = lastIdx < state.userLocs.length ? lastIdx : 0;
+      selectUserLoc(idx);
+    }
+  };
+  modal.onclick = e => { if (e.target === modal) modal.hidden = true; };
+}
+
+function renderMapMarkers() {
+  _mapMarkers.forEach(m => _map.removeLayer(m));
+  _mapMarkers = [];
+  state.userLocs.forEach((loc, i) => {
+    const m = L.marker([loc.lat, loc.lon]).addTo(_map)
+      .bindPopup(`<b>${loc.name}</b><br>${loc.lat}°N, ${loc.lon}°E`);
+    _mapMarkers.push(m);
+  });
+}
+
+function renderMapLocList() {
+  const el = document.getElementById("mapLocList");
+  if (!state.userLocs.length) {
+    el.innerHTML = `<div class="map-loc-empty">Dodirni kartu za dodavanje lokacije</div>`;
+    return;
+  }
+  el.innerHTML = state.userLocs.map((l, i) =>
+    `<div class="map-loc-item">
+      <span class="loc-name">${i + 1}. ${l.name}</span>
+      <span class="loc-coords">${l.lat}°N, ${l.lon}°E</span>
+      <button class="loc-del" data-idx="${i}" title="Obriši">✕</button>
+    </div>`
+  ).join("");
+  el.querySelectorAll(".loc-del").forEach(btn => {
+    btn.onclick = () => {
+      state.userLocs.splice(+btn.dataset.idx, 1);
+      saveUserLocs(state.userLocs);
+      renderMapMarkers();
+      renderMapLocList();
+      fillLocSelect();
+    };
+  });
+}
+
 // ================= BOOT =================
 async function boot() {
   wireTabs();
@@ -938,14 +1040,23 @@ async function boot() {
     return;
   }
   if (!state.regions.length) return;
-  wireRegion();
+  state.userLocs = loadUserLocs();
+  wireLocBar();
+  fillLocSelect();
   wireModel();
   wireVodicTab();
   wireRadar();
   wireWindRose();
   wirePullToRefresh();
-  await setRegion(state.regions[0].id);
-  locateUser({ silent: true });
+
+  if (state.userLocs.length) {
+    const lastIdx = +(localStorage.getItem("lastLocIdx") || 0);
+    const idx = lastIdx < state.userLocs.length ? lastIdx : 0;
+    await selectUserLoc(idx);
+  } else {
+    await setRegion(state.regions[0].id);
+    setTimeout(() => openMapPicker(), 500);
+  }
   state.dhmz = await fetchDhmz();
   if (state.wx) renderWarnings(state.dhmz);
 }
