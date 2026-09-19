@@ -2233,6 +2233,33 @@
           "lat": 42.7389,
           "lon": 17.5917,
           "notes": "Trajektna luka na Mljetu."
+        },
+        {
+          "id": "sv-andrija-offshore",
+          "name": "Sv. Andrija (500 m SI)",
+          "type": "anchorage",
+          "island": "Sv. Andrija",
+          "lat": 42.6435,
+          "lon": 17.9650,
+          "notes": "Otvoreno more 500 m sjeveroistočno od otoka Sv. Andrija."
+        },
+        {
+          "id": "kolocepski-kanal-orasac",
+          "name": "Koločepski kanal (Orašac)",
+          "type": "anchorage",
+          "island": "kopno",
+          "lat": 42.6620,
+          "lon": 18.0100,
+          "notes": "Sredina Koločepskog kanala ispred Orašca."
+        },
+        {
+          "id": "lokrum-stara-luka",
+          "name": "Lokrum – Stara luka",
+          "type": "anchorage",
+          "island": "kopno",
+          "lat": 42.6345,
+          "lon": 18.1155,
+          "notes": "Akvatorij između stare gradske luke i otoka Lokruma."
         }
       ],
       "fuelStations": [
