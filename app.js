@@ -637,7 +637,7 @@ function renderWarnings(dhmz) {
     `<div class="warn-head">🌊 More i vjetar <span class="warn-src">automatski iz prognoze</span></div>` + marineRows +
     `<div class="warn-jump" role="button" tabindex="0"
        onclick="document.getElementById('warnings').scrollIntoView({behavior:'smooth',block:'start'})">
-       ⚠️ Ovo je automatski izračun. <b>Obavezno provjerite i službena upozorenja DHMZ-a</b> pri dnu stranice ↓
+       ⚠️ Ovo je automatski izračun. <b>Obavezno provjerite službena upozorenja</b> na kartici ispod ↓
      </div>`;
 
   const dhmzHtml = dhmz === undefined
