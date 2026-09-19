@@ -69,12 +69,12 @@ const state = { spots: [], center: { lat: 44.72, lon: 14.55 }, active: null,
   wx: null, dhmz: undefined, mgDays: [], mgHours: [],
   capitanies: [], regions: [], regionId: null, regionRe: /$^/, mgDefaultIdx: 0,
   fuelStations: [], vodicFilter: "all",
-  model: (typeof localStorage !== "undefined" && localStorage.getItem("mgModel")) || "best_match",
+  model: (() => { try { const m = localStorage.getItem("mgModel"); return m && m !== "best_match" ? m : "italia_meteo_arpae_icon_2i"; } catch (e) { return "italia_meteo_arpae_icon_2i"; } })(),
   wrIdx: 0 };
 
 // ================= WEATHER =================
 async function fetchWeather(lat, lon) {
-  const modelParam = state.model && state.model !== "best_match" ? `&models=${state.model}` : "";
+  const modelParam = state.model ? `&models=${state.model}` : "";
   const fUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
     `&current=wind_speed_10m,wind_gusts_10m,wind_direction_10m,temperature_2m,precipitation,cloud_cover` +
     `&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m,precipitation,cloud_cover,pressure_msl,temperature_2m` +
@@ -297,11 +297,6 @@ function renderReadout(h) {
     `<div class="ro-rows">` +
     row("background:#2a78d6", "Vjetar", (() => { const bf = beaufort(h.wind); return `${Math.round(h.wind)} / udari ${Math.round(h.gust)} čv · Bf ${bf.n} (${bf.label})`; })()) +
     row("background:#1baf7a", "Valovi", h.wave == null ? "—" : (() => { const ss = seaState(h.wave); return `${h.wave.toFixed(2)} m · stanje mora ${ss.n} (${ss.label})`; })()) +
-    row("background:#5598e7", "Kiša", `${(h.precip || 0).toFixed(1)} mm`) +
-    row("background:#a7b0b8", "Oblaci", h.cloud != null ? `${Math.round(h.cloud)} %` : "—") +
-    row("background:linear-gradient(90deg,#eb6834 50%,#1baf7a 50%)", "Temperatura",
-      `zrak ${h.temp == null ? "—" : Math.round(h.temp) + "°"} · more ${h.sea == null ? "—" : Math.round(h.sea) + "°"}`) +
-    row("background:#4a3aa7", "Tlak", h.pres == null ? "—" : `${Math.round(h.pres)} hPa`) +
     `</div>`;
 }
 
@@ -533,14 +528,13 @@ const COLOR_TO_LEVEL = { yellow: "a", orange: "a", red: "r" };
 function regionName() { return (state.regions.find(r => r.id === state.regionId) || {}).name || "područje"; }
 
 const MODEL_LABELS = {
-  best_match: "Automatski",
   italia_meteo_arpae_icon_2i: "ARPAE ICON-2I",
   icon_seamless: "DWD ICON",
   ecmwf_ifs025: "ECMWF IFS",
   meteofrance_seamless: "Météo-France",
   gfs_seamless: "NOAA GFS"
 };
-function modelLabel() { return MODEL_LABELS[state.model] || state.model || "Automatski"; }
+function modelLabel() { return MODEL_LABELS[state.model] || state.model || "ARPAE ICON-2I"; }
 
 function fmtRange(onset, expires) {
   try {
@@ -637,7 +631,7 @@ function renderWarnings(dhmz) {
     `<div class="warn-head">🌊 More i vjetar <span class="warn-src">automatski iz prognoze</span></div>` + marineRows +
     `<div class="warn-jump" role="button" tabindex="0"
        onclick="document.getElementById('warnings').scrollIntoView({behavior:'smooth',block:'start'})">
-       ⚠️ Ovo je automatski izračun. <b>Obavezno provjerite i službena upozorenja DHMZ-a</b> pri dnu stranice ↓
+       ⚠️ Ovo je automatski izračun. <b>Obavezno provjerite službena upozorenja</b> na kartici ispod ↓
      </div>`;
 
   const dhmzHtml = dhmz === undefined
@@ -692,7 +686,10 @@ async function setRegion(id, opts = {}) {
 async function selectSpot(id) {
   const spot = state.spots.find(s => s.id === id) || null;
   state.active = spot;
-  document.getElementById("wxSelect").value = id || "";
+  ["wxSelect", "wxSelectMg", "wxSelectWr"].forEach(sid => {
+    const el = document.getElementById(sid);
+    if (el) el.value = id || "";
+  });
   if (spot) await loadWeather(spot.lat, spot.lon, spot.name);
 }
 
@@ -762,13 +759,17 @@ function fillSelectors() {
   const centerLabel = `— cijelo ${regionName} (centar) —`;
   const opts = `<option value="">${centerLabel}</option>` +
     state.spots.map(s => `<option value="${s.id}">${s.name}</option>`).join("");
-  const wx = document.getElementById("wxSelect");
-  wx.innerHTML = opts;
-  wx.onchange = () => {
-    const id = wx.value;
-    if (!id) { loadWeather(state.center.lat, state.center.lon, regionName + " (centar)"); return; }
-    selectSpot(id);
+  const selectors = ["wxSelect", "wxSelectMg", "wxSelectWr"]
+    .map(id => document.getElementById(id)).filter(Boolean);
+  const onSpotChange = (val) => {
+    selectors.forEach(s => s.value = val);
+    if (!val) { loadWeather(state.center.lat, state.center.lon, regionName + " (centar)"); return; }
+    selectSpot(val);
   };
+  selectors.forEach(sel => {
+    sel.innerHTML = opts;
+    sel.onchange = () => onSpotChange(sel.value);
+  });
 }
 
 // Odabir područja + GPS
@@ -1327,4 +1328,8 @@ function refreshWindRose() {
 }
 
 boot();
+
+if ("serviceWorker" in navigator && !IS_NATIVE) {
+  navigator.serviceWorker.register("/sw.js").catch(() => {});
+}
 

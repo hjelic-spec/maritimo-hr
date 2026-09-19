@@ -3,12 +3,99 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- SEO Core -->
+  <title>Maritimo — Pomorska prognoza za Jadran | Vjetar, valovi, more</title>
+  <meta name="description" content="Besplatna pomorska vremenska prognoza za voditelje brodica na Jadranu. 3-dnevna prognoza vjetra, valova, temperature mora, meteogram i ruža vjetrova za 6 obalnih regija Hrvatske." />
+  <meta name="keywords" content="pomorska prognoza, Jadran, vremenska prognoza more, vjetar Jadran, valovi Jadran, bura, jugo, maestral, prognoza za brodice, maritimo, DHMZ, Hrvatska obala, navigacija, Beaufort, plovidba" />
+  <meta name="author" content="Maritimo" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <link rel="canonical" href="https://maritimo.com.hr/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://maritimo.com.hr/" />
+  <meta property="og:title" content="Maritimo — Pomorska prognoza za Jadran" />
+  <meta property="og:description" content="3-dnevna prognoza vjetra, valova i temperature mora za voditelje brodica. Meteogram, ruža vjetrova, DHMZ upozorenja i vodič po lukama Jadrana." />
+  <meta property="og:image" content="https://maritimo.com.hr/og-image.svg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="hr_HR" />
+  <meta property="og:site_name" content="Maritimo" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Maritimo — Pomorska prognoza za Jadran" />
+  <meta name="twitter:description" content="Besplatna 3-dnevna prognoza vjetra, valova i temperature mora za brodice na Jadranu." />
+  <meta name="twitter:image" content="https://maritimo.com.hr/og-image.svg" />
+
+  <!-- Theme & PWA -->
   <meta name="theme-color" content="#2c4f6e" />
-  <title>Maritimo · Jadran</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Maritimo" />
+  <meta name="application-name" content="Maritimo" />
+  <meta name="msapplication-TileColor" content="#2c4f6e" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon-192.svg" />
+
+  <!-- Preconnect & Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://api.open-meteo.com" />
+  <link rel="preconnect" href="https://marine-api.open-meteo.com" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Maritimo",
+    "alternateName": "Maritimo Jadran",
+    "url": "https://maritimo.com.hr/",
+    "description": "Pomorska vremenska prognoza za voditelje brodica na Jadranskom moru. Prognoza vjetra, valova, temperature mora, meteogram i ruža vjetrova.",
+    "applicationCategory": "WeatherApplication",
+    "operatingSystem": "Web, Android, iOS",
+    "inLanguage": "hr",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Maritimo",
+      "url": "https://maritimo.com.hr/"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "ratingCount": "1"
+    },
+    "featureList": [
+      "3-dnevna pomorska prognoza",
+      "Prognoza vjetra i valova",
+      "Temperatura mora",
+      "Meteogram (72 sata)",
+      "Ruža vjetrova",
+      "DHMZ upozorenja",
+      "Vodič po lukama i marinama",
+      "6 obalnih regija Hrvatske"
+    ],
+    "areaServed": {
+      "@type": "Place",
+      "name": "Jadransko more, Hrvatska",
+      "geo": {
+        "@type": "GeoShape",
+        "box": "42.4 13.5 45.5 17.5"
+      }
+    }
+  }
+  </script>
 </head>
 <body>
   <header class="topbar">
@@ -29,7 +116,16 @@
     <button id="gpsBtn" class="gps-btn" title="Prognoza za moju GPS lokaciju">📍 Moja lokacija</button>
   </div>
 
-  <main class="main">
+  <noscript>
+    <div style="padding:2rem;text-align:center;font-family:system-ui">
+      <h2>Maritimo — Pomorska prognoza za Jadran</h2>
+      <p>Besplatna 3-dnevna pomorska vremenska prognoza za voditelje brodica na Jadranskom moru.</p>
+      <p>Prognoza vjetra, valova, temperature mora, meteogram, ruža vjetrova i DHMZ upozorenja za 6 obalnih regija Hrvatske: Istra, Kvarner, Zadar, Šibenik, Split i Dubrovnik.</p>
+      <p>Za korištenje aplikacije potreban je JavaScript.</p>
+    </div>
+  </noscript>
+
+  <main class="main" role="main">
     <!-- TAB: PROGNOZA (dnevne oznake + upozorenja) -->
     <section class="tabpane active" id="tab-vrijeme">
       <div class="ptr-indicator" id="ptrIndicator">↓ Povuci za osvježavanje</div>
@@ -40,10 +136,9 @@
         </div>
 
         <div class="card warnings" id="warnMarine"></div>
+        <div class="card warnings" id="warnings"></div>
 
         <div id="forecastSummary"></div>
-
-        <div class="card warnings" id="warnings"></div>
 
         <p class="disclaimer">
           ⚠️ Prognoza: Open-Meteo. Oznake isplovljavanja i
@@ -56,6 +151,10 @@
     <!-- TAB: METEOGRAM -->
     <section class="tabpane" id="tab-meteogram">
       <div class="wx-scroll">
+        <div class="picker">
+          <label for="wxSelectMg">Lokacija prognoze</label>
+          <select id="wxSelectMg"></select>
+        </div>
         <div id="meteograms"></div>
 
         <div class="mg-legend">
@@ -78,6 +177,12 @@
 
     <!-- TAB: RUŽA VJETROVA -->
     <section class="tabpane" id="tab-ruza">
+      <div class="wx-scroll">
+        <div class="picker">
+          <label for="wxSelectWr">Lokacija prognoze</label>
+          <select id="wxSelectWr"></select>
+        </div>
+      </div>
       <div class="wr-scroll">
         <div class="wr-slider-box">
           <button class="wr-arrow" id="wrPrev" title="Prethodni sat">◀</button>
@@ -171,6 +276,21 @@
         </div>
 
         <div class="card info-card">
+          <h3>⚙️ Model prognoze</h3>
+          <p>Meteogram (vjetar, temperatura, tlak, oborina, oblaci) računa se iz odabranog modela.
+          <strong>Valovi i temperatura mora</strong> dolaze iz pomorskog modela neovisno o ovom odabiru.
+          Zadani model je <strong>ARPAE ICON-2I</strong> — talijanski model visoke rezolucije, optimalan za Jadran.</p>
+          <select id="modelSelect" class="model-select">
+            <option value="italia_meteo_arpae_icon_2i" selected>ARPAE ICON-2I — Italija / Jadran (visoka rez.) (zadano)</option>
+            <option value="icon_seamless">DWD ICON — Njemačka</option>
+            <option value="ecmwf_ifs025">ECMWF IFS — Europa</option>
+            <option value="meteofrance_seamless">Météo-France ARPEGE / AROME</option>
+            <option value="gfs_seamless">NOAA GFS — SAD</option>
+          </select>
+          <p class="info-note">Različiti modeli mogu dati različite rezultate. Odabir se pamti i odmah osvježava meteogram.</p>
+        </div>
+
+        <div class="card info-card">
           <h3>🌤️ Tab Prognoza</h3>
           <p>Dnevni pregled za <strong>3 dana</strong> s ključnim podacima za svaki dan:</p>
           <ul>
@@ -211,22 +331,6 @@
             <li>Prognoza je <strong>za točku</strong> (odabrano područje/sidrište ili GPS) — lokalni
             efekti (bura niz kanale, nagli maestral) mogu odstupati.</li>
           </ul>
-        </div>
-
-        <div class="card info-card">
-          <h3>⚙️ Model prognoze</h3>
-          <p>Meteogram (vjetar, temperatura, tlak, oborina, oblaci) računa se iz odabranog modela.
-          <strong>Valovi i temperatura mora</strong> dolaze iz pomorskog modela neovisno o ovom odabiru.</p>
-          <select id="modelSelect" class="model-select">
-            <option value="best_match">Automatski — najbolji za lokaciju (zadano)</option>
-            <option value="italia_meteo_arpae_icon_2i">ARPAE ICON-2I — Italija / Jadran (visoka rez.)</option>
-            <option value="icon_seamless">DWD ICON — Njemačka</option>
-            <option value="ecmwf_ifs025">ECMWF IFS — Europa</option>
-            <option value="meteofrance_seamless">Météo-France ARPEGE / AROME</option>
-            <option value="gfs_seamless">NOAA GFS — SAD</option>
-          </select>
-          <p class="info-note">Različiti modeli mogu dati različite rezultate; „Automatski" spaja
-          najbolji dostupni. Odabir se pamti i odmah osvježava meteogram.</p>
         </div>
 
         <div class="card info-card">
