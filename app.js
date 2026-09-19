@@ -69,7 +69,7 @@ const state = { spots: [], center: { lat: 44.72, lon: 14.55 }, active: null,
   wx: null, dhmz: undefined, mgDays: [], mgHours: [],
   capitanies: [], regions: [], regionId: null, regionRe: /$^/, mgDefaultIdx: 0,
   fuelStations: [], vodicFilter: "all",
-  model: (typeof localStorage !== "undefined" && localStorage.getItem("mgModel")) || "best_match",
+  model: (typeof localStorage !== "undefined" && localStorage.getItem("mgModel")) || "italia_meteo_arpae_icon_2i",
   wrIdx: 0 };
 
 // ================= WEATHER =================
