@@ -947,6 +947,15 @@ function openMapPicker() {
       attribution: "&copy; OpenStreetMap",
       maxZoom: 18
     }).addTo(_map);
+    const coordEl = document.createElement("div");
+    coordEl.className = "map-coords-overlay";
+    document.getElementById("mapContainer").appendChild(coordEl);
+    function updateCoords() {
+      const c = _map.getCenter();
+      coordEl.textContent = c.lat.toFixed(4) + "°N, " + c.lng.toFixed(4) + "°E";
+    }
+    _map.on("move", updateCoords);
+    updateCoords();
     _map.on("click", e => {
       if (state.userLocs.length >= 5) return;
       _pendingLatLng = e.latlng;

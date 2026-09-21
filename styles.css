@@ -112,6 +112,12 @@ body {
   color: var(--navy); text-shadow: 0 0 4px #fff, 0 0 4px #fff;
   pointer-events: none;
 }
+.map-coords-overlay {
+  position: absolute; top: 8px; left: 50px; z-index: 999;
+  background: rgba(255,255,255,.85); padding: 4px 8px; border-radius: 6px;
+  font-size: 12px; font-weight: 600; color: var(--navy);
+  pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
 .map-loc-list { padding: 8px 16px; display: flex; flex-direction: column; gap: 6px; }
 .map-loc-item {
   display: flex; align-items: center; gap: 8px; padding: 8px 10px;
