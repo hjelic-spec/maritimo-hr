@@ -453,16 +453,6 @@ body {
 .warn-jump b { color: var(--amber-ink); }
 .warn-jump:hover { background: rgba(232,168,48,.15); }
 
-/* ═══════ Picker ═══════ */
-.picker { display: flex; flex-direction: column; gap: 5px; }
-.picker label { font-size: 12px; color: var(--muted); font-weight: 600; padding-left: 4px; }
-.picker select {
-  padding: 11px 12px; border-radius: var(--radius-sm);
-  border: 1px solid var(--glass-border);
-  background: rgba(255,255,255,.65); font-size: 15px; color: var(--ink);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  box-shadow: var(--glass-inset);
-}
 
 .detail-empty { color: var(--muted); font-size: 14px; text-align: center; padding: 8px; }
 

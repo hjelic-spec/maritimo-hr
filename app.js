@@ -694,7 +694,6 @@ async function setRegion(id, opts = {}) {
   state.capitanies = r.capitanies || [];
   state.fuelStations = r.fuelStations || [];
   state.regionRe = new RegExp(r.dhmz, "i");
-  state.active = null;
   wireSos();
   renderVodic();
   if (opts.skipWeather) return;
@@ -778,6 +777,8 @@ function wireSos() {
     : "";
 }
 
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
 function fillLocSelect() {
   const sel = document.getElementById("locSelect");
   if (!sel) return;
@@ -785,7 +786,7 @@ function fillLocSelect() {
     sel.innerHTML = `<option value="">— dodaj lokacije na karti —</option>`;
     return;
   }
-  sel.innerHTML = state.userLocs.map((l, i) => `<option value="${i}">${l.name}</option>`).join("");
+  sel.innerHTML = state.userLocs.map((l, i) => `<option value="${i}">${esc(l.name)}</option>`).join("");
   sel.onchange = () => selectUserLoc(+sel.value);
 }
 
@@ -1008,7 +1009,7 @@ function renderMapMarkers() {
   _mapMarkers = [];
   state.userLocs.forEach((loc, i) => {
     const m = L.marker([loc.lat, loc.lon]).addTo(_map)
-      .bindPopup(`<b>${loc.name}</b><br>${loc.lat}°N, ${loc.lon}°E`);
+      .bindPopup(`<b>${esc(loc.name)}</b><br>${loc.lat}°N, ${loc.lon}°E`);
     _mapMarkers.push(m);
   });
 }
@@ -1021,7 +1022,7 @@ function renderMapLocList() {
   }
   el.innerHTML = state.userLocs.map((l, i) =>
     `<div class="map-loc-item">
-      <span class="loc-name">${i + 1}. ${l.name}</span>
+      <span class="loc-name">${i + 1}. ${esc(l.name)}</span>
       <span class="loc-coords">${l.lat}°N, ${l.lon}°E</span>
       <button class="loc-del" data-idx="${i}" title="Obriši">✕</button>
     </div>`
