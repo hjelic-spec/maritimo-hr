@@ -38,6 +38,10 @@
   <meta name="msapplication-TileColor" content="#2c4f6e" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon-192.svg" type="image/svg+xml" />
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
   <link rel="apple-touch-icon" href="icons/icon-192.svg" />
 
   <!-- Preconnect & Styles -->
@@ -46,7 +50,7 @@
   <link rel="preconnect" href="https://api.open-meteo.com" />
   <link rel="preconnect" href="https://marine-api.open-meteo.com" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=3" />
 
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
@@ -84,7 +88,7 @@
       "Ruža vjetrova",
       "DHMZ upozorenja",
       "Vodič po lukama i marinama",
-      "6 obalnih regija Hrvatske"
+      "Odabir lokacije na karti"
     ],
     "areaServed": {
       "@type": "Place",
@@ -109,11 +113,32 @@
     <button id="sosBtn" class="sos" aria-label="Hitne službe">SOS</button>
   </header>
 
-  <!-- Region + GPS -->
-  <div class="regionbar">
-    <span class="regionbar-lbl">Područje</span>
-    <select id="regionSelect"></select>
-    <button id="gpsBtn" class="gps-btn" title="Prognoza za moju GPS lokaciju">📍 Moja lokacija</button>
+  <!-- Location bar -->
+  <div class="locbar">
+    <select id="locSelect" class="loc-select"></select>
+    <button id="gpsBtn" class="loc-btn" title="GPS lokacija">📍</button>
+    <button id="mapBtn" class="loc-btn" title="Upravljaj lokacijama">🗺️</button>
+  </div>
+
+  <!-- Map picker modal -->
+  <div class="modal-backdrop" id="mapModal" hidden>
+    <div class="map-modal">
+      <div class="map-modal-head">
+        <h2>📍 Moje lokacije</h2>
+        <span class="map-modal-hint">Dodirni kartu za novu lokaciju (maks. 5)</span>
+        <button id="mapClose" aria-label="Zatvori">✕</button>
+      </div>
+      <div id="mapContainer" style="height:50vh;min-height:280px"></div>
+      <div id="mapNameBar" class="map-name-bar" hidden>
+        <input id="mapNameInput" type="text" placeholder="Naziv lokacije…" maxlength="40" class="map-name-input" />
+        <button id="mapNameOk" class="map-name-ok">Dodaj</button>
+        <button id="mapNameCancel" class="map-name-cancel">✕</button>
+      </div>
+      <div id="mapLocList" class="map-loc-list"></div>
+      <div class="map-modal-foot">
+        <button id="mapDone" class="map-done-btn">Gotovo</button>
+      </div>
+    </div>
   </div>
 
   <noscript>
@@ -130,11 +155,6 @@
     <section class="tabpane active" id="tab-vrijeme">
       <div class="ptr-indicator" id="ptrIndicator">↓ Povuci za osvježavanje</div>
       <div class="wx-scroll">
-        <div class="picker">
-          <label for="wxSelect">Lokacija prognoze</label>
-          <select id="wxSelect"></select>
-        </div>
-
         <div class="card warnings" id="warnMarine"></div>
         <div class="card warnings" id="warnings"></div>
 
@@ -151,10 +171,6 @@
     <!-- TAB: METEOGRAM -->
     <section class="tabpane" id="tab-meteogram">
       <div class="wx-scroll">
-        <div class="picker">
-          <label for="wxSelectMg">Lokacija prognoze</label>
-          <select id="wxSelectMg"></select>
-        </div>
         <div id="meteograms"></div>
 
         <div class="mg-legend">
@@ -177,12 +193,6 @@
 
     <!-- TAB: RUŽA VJETROVA -->
     <section class="tabpane" id="tab-ruza">
-      <div class="wx-scroll">
-        <div class="picker">
-          <label for="wxSelectWr">Lokacija prognoze</label>
-          <select id="wxSelectWr"></select>
-        </div>
-      </div>
       <div class="wr-scroll">
         <div class="wr-slider-box">
           <button class="wr-arrow" id="wrPrev" title="Prethodni sat">◀</button>
@@ -273,6 +283,19 @@
           <strong>ne smiju se koristiti za stvarnu navigaciju</strong> ni za odluke o sigurnosti.
           Uvijek koristite <strong>službene pomorske karte, peljar i upozorenja DHMZ-a</strong>,
           te u nuždi <strong>MRCC (195) / 112 / VHF kanal 16</strong>.</p>
+        </div>
+
+        <div class="card info-card">
+          <h3>📍 Odabir lokacije</h3>
+          <p>Maritimo koristi <strong>vaše vlastite lokacije</strong> — svaki korisnik bira do 5 točaka na karti
+          za koje želi pratiti prognozu.</p>
+          <ul>
+            <li><strong>🗺️ Upravljaj lokacijama</strong> — otvara kartu za dodavanje, brisanje i pregled vaših lokacija.</li>
+            <li><strong>Dodavanje</strong> — dodirnite kartu na željenom mjestu, upišite naziv i potvrdite. Križić na sredini karte pokazuje točne koordinate.</li>
+            <li><strong>Prebacivanje</strong> — koristite padajući izbornik na vrhu za brzi odabir između spremljenih lokacija.</li>
+            <li><strong>📍 GPS</strong> — prikazuje prognozu za vašu trenutnu GPS lokaciju.</li>
+          </ul>
+          <p class="info-note">Lokacije se spremaju na vašem uređaju — svaki korisnik ima svoje, bez potrebe za prijavom.</p>
         </div>
 
         <div class="card info-card">
@@ -443,19 +466,6 @@
         </div>
 
         <div class="card info-card">
-          <h3>📍 Odabir lokacije i GPS</h3>
-          <ul>
-            <li>Gore biraš <strong>područje</strong> (Istra, Kvarner, Zadar, Šibenik, Split, Dubrovnik),
-            pa centar ili konkretno sidrište/luku/marinu.</li>
-            <li><strong>📍 Moja lokacija</strong> — GPS automatski odabere <strong>najbliže područje</strong>
-            i <strong>najbliže sidrište</strong> unutar tog područja. Prognoza se učitava za koordinate
-            tog sidrišta (ne za tvoju točnu GPS poziciju), jer su prognostičke točke vezane uz poznate lokacije.</li>
-            <li>Ako ručno odabereš „centar" umjesto konkretnog sidrišta, prognoza je za
-            središnju točku područja.</li>
-          </ul>
-        </div>
-
-        <div class="card info-card">
           <h3>🆘 Sigurnost</h3>
           <p>Gumb <strong>SOS</strong> nudi: <strong>MRCC 195</strong>, <strong>112</strong>,
           <strong>VHF kanal 16</strong> (poziv u pogibelji), najbližu lučku kapetaniju i SeaHelp.
@@ -470,7 +480,7 @@
           </ul>
         </div>
 
-        <p class="app-version">Verzija 1.0.6</p>
+        <p class="app-version">Verzija 1.1.0</p>
 
         <p class="disclaimer">
           Maritimo. Sve procjene su informativne i ne zamjenjuju službene pomorske izvore,
@@ -568,6 +578,6 @@
   </div>
 
   <script src="capacitor.js" onerror=""></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

@@ -67,33 +67,92 @@ body {
 .sos:active { transform: scale(.95); box-shadow: 0 1px 6px rgba(224,85,85,.2); }
 
 /* ═══════ Region bar ═══════ */
-.regionbar {
-  display: flex; align-items: center; gap: 8px;
+.locbar {
+  display: flex; align-items: center; gap: 6px;
   padding: 8px 16px;
   background: rgba(26, 58, 92, 0.6);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
-.regionbar-lbl { font-size: 11px; color: rgba(170, 200, 225, 0.85); font-weight: 600; letter-spacing: .3px; }
-.regionbar select {
+.loc-select {
   flex: 1; min-width: 0; padding: 8px 12px; border-radius: 10px;
   border: 1px solid rgba(255,255,255,.15);
   background: rgba(255,255,255,.9); color: var(--ink);
   font-size: 14px; font-family: inherit;
   box-shadow: 0 1px 4px rgba(0,0,0,.06);
 }
-.gps-btn {
-  flex-shrink: 0; padding: 8px 14px; border-radius: 10px; cursor: pointer;
+.loc-btn {
+  flex-shrink: 0; width: 38px; height: 38px; border-radius: 10px; cursor: pointer;
   border: 1px solid rgba(255,255,255,.2);
   background: rgba(255,255,255,.12);
-  color: #fff; font-size: 13px; font-weight: 600; font-family: inherit; white-space: nowrap;
+  color: #fff; font-size: 18px; display: flex; align-items: center; justify-content: center;
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   transition: background .15s, transform .1s;
   box-shadow: var(--glass-inset);
 }
-.gps-btn:hover { background: rgba(255,255,255,.2); }
-.gps-btn:active { transform: scale(.97); }
-.gps-btn:disabled { opacity: .5; cursor: default; }
+.loc-btn:hover { background: rgba(255,255,255,.2); }
+.loc-btn:active { transform: scale(.97); }
+.loc-btn:disabled { opacity: .5; cursor: default; }
+
+.map-modal {
+  background: var(--card-solid); border-radius: var(--radius); width: 95vw; max-width: 540px;
+  max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,.25);
+}
+.map-modal-head {
+  display: flex; align-items: center; gap: 8px; padding: 14px 16px 8px; flex-wrap: wrap;
+}
+.map-modal-head h2 { font-size: 17px; margin: 0; flex: 1; }
+.map-modal-head button { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--muted); }
+.map-modal-hint { width: 100%; font-size: 12px; color: var(--muted); }
+#mapContainer { position: relative; }
+#mapContainer::after {
+  content: "+"; position: absolute; top: 50%; left: 50%; z-index: 999;
+  transform: translate(-50%, -50%);
+  font-size: 32px; font-weight: 700; line-height: 1;
+  color: var(--navy); text-shadow: 0 0 4px #fff, 0 0 4px #fff;
+  pointer-events: none;
+}
+.map-coords-overlay {
+  position: absolute; top: 8px; left: 50px; z-index: 999;
+  background: rgba(255,255,255,.85); padding: 4px 8px; border-radius: 6px;
+  font-size: 12px; font-weight: 600; color: var(--navy);
+  pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+.map-loc-list { padding: 8px 16px; display: flex; flex-direction: column; gap: 6px; }
+.map-loc-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  background: var(--bg); border-radius: var(--radius-sm); font-size: 14px;
+}
+.map-loc-item .loc-name { flex: 1; font-weight: 600; }
+.map-loc-item .loc-coords { font-size: 11px; color: var(--muted); }
+.map-loc-item .loc-del {
+  background: none; border: none; font-size: 18px; cursor: pointer; color: var(--red);
+  padding: 0 4px;
+}
+.map-modal-foot { padding: 10px 16px 14px; text-align: right; }
+.map-done-btn {
+  padding: 10px 28px; border-radius: 10px; border: none; cursor: pointer;
+  background: var(--navy); color: #fff; font-size: 15px; font-weight: 600; font-family: inherit;
+}
+.map-loc-empty {
+  text-align: center; padding: 20px; color: var(--muted); font-size: 14px;
+}
+.map-name-bar {
+  display: flex; align-items: center; gap: 6px; padding: 10px 16px;
+  background: var(--bg); border-top: 1px solid var(--line);
+}
+.map-name-bar[hidden] { display: none; }
+.map-name-input {
+  flex: 1; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line);
+  font-size: 14px; font-family: inherit;
+}
+.map-name-ok {
+  padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer;
+  background: var(--navy); color: #fff; font-size: 14px; font-weight: 600; font-family: inherit;
+}
+.map-name-cancel {
+  background: none; border: none; font-size: 18px; cursor: pointer; color: var(--muted); padding: 4px;
+}
 
 /* ═══════ Bottom Tab Bar ═══════ */
 .tabbar {
@@ -394,16 +453,6 @@ body {
 .warn-jump b { color: var(--amber-ink); }
 .warn-jump:hover { background: rgba(232,168,48,.15); }
 
-/* ═══════ Picker ═══════ */
-.picker { display: flex; flex-direction: column; gap: 5px; }
-.picker label { font-size: 12px; color: var(--muted); font-weight: 600; padding-left: 4px; }
-.picker select {
-  padding: 11px 12px; border-radius: var(--radius-sm);
-  border: 1px solid var(--glass-border);
-  background: rgba(255,255,255,.65); font-size: 15px; color: var(--ink);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  box-shadow: var(--glass-inset);
-}
 
 .detail-empty { color: var(--muted); font-size: 14px; text-align: center; padding: 8px; }
 

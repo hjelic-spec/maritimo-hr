@@ -380,6 +380,7 @@ function dhmzWindForDay(dateStr) {
   if (!all || !all.length) return [];
   const ds = new Date(dateStr + "T00:00:00"), de = new Date(dateStr + "T23:59:59");
   return all.filter(w => {
+    if (w.color === "green") return false;
     if (!(w.areas || []).some(a => state.regionRe.test(a))) return false;
     if (!/vjetar|bura|olujno|jugo/i.test(w.event || "")) return false;
     const o = new Date(w.onset), e = new Date(w.expires);
@@ -628,13 +629,8 @@ async function fetchDhmz() {
 
 function dhmzRows(all) {
   if (all === null) return `<div class="warn-note">DHMZ upozorenja trenutno nedostupna.</div>`;
-  const mine = all.filter(w => (w.areas || []).some(a => state.regionRe.test(a)));
-  if (!mine.length) {
-    const other = all.length ? ` (${all.length} za druge regije)` : "";
-    return `<div class="warn-row g"><span class="warn-dot"></span>
-      <div><b>Nema službenih upozorenja za ovo područje</b><br>
-      <span class="warn-detail">danas prema DHMZ-u${other}</span></div></div>`;
-  }
+  const mine = all.filter(w => w.color !== "green" && (w.areas || []).some(a => state.regionRe.test(a)));
+  if (!mine.length) return "";
   return mine.map(w => {
     const lvl = COLOR_TO_LEVEL[w.color] || "a";
     const area = (w.areas || []).filter(a => state.regionRe.test(a))[0] || (w.areas || [])[0] || "";
@@ -646,28 +642,36 @@ function dhmzRows(all) {
 
 function renderWarnings(dhmz) {
   const el = document.getElementById("warnings");
+  const marineEl = document.getElementById("warnMarine");
   const marine = deriveWarnings();
-  const marineRows = marine.length
-    ? marine.map(w => `<div class="warn-row ${w.level}"><span class="warn-dot"></span>
+  if (!marine.length) {
+    marineEl.hidden = true;
+  } else {
+    marineEl.hidden = false;
+    const marineRows = marine.map(w => `<div class="warn-row ${w.level}"><span class="warn-dot"></span>
         <div><b>${w.title}</b> <span class="warn-when">${whenLabel(w.when)}</span><br>
-        <span class="warn-detail">${w.detail}</span></div></div>`).join("")
-    : `<div class="warn-row g"><span class="warn-dot"></span><div><b>More mirno</b><br>
-       <span class="warn-detail">nema jakog vjetra/valova u 3 dana</span></div></div>`;
-  document.getElementById("warnMarine").innerHTML =
-    `<div class="warn-head">🌊 More i vjetar <span class="warn-src">automatski iz prognoze</span></div>` + marineRows +
-    `<div class="warn-jump" role="button" tabindex="0"
-       onclick="document.getElementById('warnings').scrollIntoView({behavior:'smooth',block:'start'})">
-       ⚠️ Ovo je automatski izračun. <b>Obavezno provjerite službena upozorenja</b> na kartici ispod ↓
-     </div>`;
+        <span class="warn-detail">${w.detail}</span></div></div>`).join("");
+    marineEl.innerHTML =
+      `<div class="warn-head">🌊 More i vjetar <span class="warn-src">automatski iz prognoze</span></div>` + marineRows +
+      `<div class="warn-jump" role="button" tabindex="0"
+         onclick="document.getElementById('warnings').scrollIntoView({behavior:'smooth',block:'start'})">
+         ⚠️ Ovo je automatski izračun. <b>Obavezno provjerite službena upozorenja</b> na kartici ispod ↓
+       </div>`;
+  }
 
   const dhmzHtml = dhmz === undefined
     ? `<div class="warn-note">učitavam DHMZ…</div>` : dhmzRows(dhmz);
-
-  el.innerHTML = `
-    <div class="warn-head">⚠️ Službena upozorenja <span class="warn-src">DHMZ · ${regionName()}</span></div>
-    ${dhmzHtml}
-    <a class="warn-official" href="https://meteo.hr/naslovnica-upozorenja.php" target="_blank" rel="noopener">
-      Sve regije na DHMZ-u →</a>`;
+  const hasReal = dhmz !== undefined && dhmzHtml !== "";
+  if (dhmz !== undefined && !hasReal) {
+    el.hidden = true;
+  } else {
+    el.hidden = false;
+    el.innerHTML = `
+      <div class="warn-head">⚠️ Službena upozorenja <span class="warn-src">DHMZ · ${regionName()}</span></div>
+      ${dhmzHtml}
+      <a class="warn-official" href="https://meteo.hr/naslovnica-upozorenja.php" target="_blank" rel="noopener">
+        Sve regije na DHMZ-u →</a>`;
+  }
 }
 
 // Učitaj vrijeme za lokaciju i osvježi tab Vrijeme
